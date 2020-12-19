@@ -1,0 +1,11 @@
+{
+  "name": "weppo-project",
+  "version": "1.0.0",
+  "main": "server.js",
+  "repository": "https://github.com/Motii1/weppo-project.git",
+  "author": "Dawid Motak, Krystian Sanczyk, Przemyslaw Stasiuk",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
