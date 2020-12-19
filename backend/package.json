@@ -1,0 +1,21 @@
+{
+  "name": "weppo-project",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "server.js",
+  "repository": "https://github.com/Motii1/weppo-project.git",
+  "author": "Dawid Motak, Krystian Sanczyk, Przemyslaw Stasiuk",
+  "license": "MIT",
+  "scripts": {
+    "eslint": "eslint ./ --ignore-path ../.gitignore",
+    "eslint:fix": "yarn eslint --fix",
+    "format": "prettier --write \"{,!(node_modules)/**/}*.js\""
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "eslint-config-node": "^4.1.0",
+    "prettier": "^2.2.1"
+  }
+}
