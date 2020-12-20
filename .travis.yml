@@ -4,6 +4,9 @@ node_js:
  - node
 install: 
   - yarn install
+before_build:
+  - cd frontend && yarn eslint && yarn test
+  - cd ../backend && yarn eslint
 script:
-  - cd frontend && yarn test
-# - cd ../backend && yarn test
+  - cd frontend && yarn build
+  - cd ../backend && yarn build
