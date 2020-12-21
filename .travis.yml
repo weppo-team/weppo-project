@@ -3,10 +3,11 @@ cache: yarn
 node_js:
  - node
 install: 
-  - yarn install
-before_build:
+  - cd frontend && yarn install
+  - cd ../backend && yarn install
+before_script:
   - cd frontend && yarn eslint && yarn test
   - cd ../backend && yarn eslint
 script:
   - cd frontend && yarn build
-  - cd ../backend && yarn build
+  - cd ../backend && yarn start
