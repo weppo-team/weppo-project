@@ -1,0 +1,13 @@
+language: node_js 
+cache: yarn
+node_js:
+ - node
+install: 
+  - cd frontend && yarn install
+  - cd ../backend && yarn install
+before_script:
+  - cd frontend && yarn eslint && yarn test
+  - cd ../backend && yarn eslint
+script:
+  - cd frontend && yarn build
+  - cd ../backend && yarn start
