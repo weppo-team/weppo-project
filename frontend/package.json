@@ -6,10 +6,12 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "antd": "^4.9.4",
     "http-proxy-middleware": "^1.0.6",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.1",
+    "styled-components": "^5.2.1",
     "web-vitals": "^0.2.4"
   },
   "scripts": {
@@ -20,6 +22,11 @@
     "eslint": "eslint --ext .js,.jsx ./ --ignore-path ../.gitignore",
     "eslint:fix": "yarn eslint --fix",
     "format": "prettier --write \"{,!(node_modules)/**/}*.js(?:x)?\""
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "/node_modules/(?!antd|@ant-design|rc-.+?|@babel/runtime).+(js|jsx)$"
+    ]
   },
   "prettier": "@imaginary-cloud/prettier-config",
   "browserslist": {
