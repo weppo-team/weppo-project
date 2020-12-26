@@ -6,8 +6,8 @@ install:
   - cd frontend && yarn install
   - cd ../backend && yarn install
 before_script:
-  - cd frontend && yarn eslint && yarn test
-  - cd ../backend && yarn eslint
+  - cd ../frontend && yarn eslint && yarn test
+  - cd ../backend && yarn eslint && yarn test
 script:
-  - cd frontend && yarn build
+  - cd ../frontend && yarn build
   - cd ../backend && yarn start
