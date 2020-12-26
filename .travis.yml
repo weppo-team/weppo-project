@@ -10,4 +10,4 @@ before_script:
   - cd ../backend && yarn eslint && yarn test
 script:
   - cd ../frontend && yarn build
-  - cd ../backend && yarn start
+  - cd ../backend
