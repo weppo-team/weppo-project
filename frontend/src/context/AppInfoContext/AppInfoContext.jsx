@@ -1,4 +1,4 @@
-import { createContext } from 'react'
+import { createContext, useContext } from 'react'
 import PropTypes from 'prop-types'
 
 const appInfo = {
@@ -6,7 +6,7 @@ const appInfo = {
   repoUrl: 'https://github.com/weppo-team/weppo-project',
 }
 
-export const AppInfoContext = createContext(appInfo)
+const AppInfoContext = createContext(appInfo)
 
 export const AppInfoProvider = ({ children }) => (
   <AppInfoContext.Provider value={appInfo}>{children}</AppInfoContext.Provider>
@@ -15,3 +15,5 @@ export const AppInfoProvider = ({ children }) => (
 AppInfoProvider.propTypes = {
   children: PropTypes.node.isRequired,
 }
+
+export const useAppInfo = () => useContext(AppInfoContext)

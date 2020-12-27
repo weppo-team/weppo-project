@@ -1,15 +1,14 @@
 import { Typography } from 'antd'
-import { useContext } from 'react'
 import { NavigationMenu } from './components/NavigationMenu'
 import { SidebarElements } from './elements'
-import { AppInfoContext } from '../../context/AppInfoContext'
+import { useAppInfo } from '../../context/AppInfoContext'
 
 const { Title } = Typography
 
 const { LogoWrapper, StyledSider, StyledDivider } = SidebarElements
 
 export const Sidebar = () => {
-  const { title } = useContext(AppInfoContext)
+  const { title } = useAppInfo()
 
   return (
     <StyledSider breakpoint="lg" collapsedWidth="0">

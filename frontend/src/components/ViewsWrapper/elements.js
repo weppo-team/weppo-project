@@ -1,14 +1,7 @@
 import styled, { css } from 'styled-components'
 import { Layout } from 'antd'
 
-const { Header: AntdHeader, Content: AntdContent } = Layout
-
-const Header = styled(AntdHeader)(
-  ({ theme }) => css`
-    padding: 0;
-    background-color: ${theme.color.white};
-  `,
-)
+const { Content: AntdContent } = Layout
 
 const Content = styled(AntdContent)(
   ({ theme }) => css`
@@ -23,7 +16,6 @@ const MainLayout = styled(Layout)`
 `
 
 export const ViewsWrapperElements = {
-  Header,
   Content,
   MainLayout,
 }
