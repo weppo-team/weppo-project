@@ -1,8 +1,11 @@
-import { ThemeProvider } from 'styled-components'
-import { theme } from './style/theme'
+import { AppProviders } from './context/AppProviders'
+import { Boundary } from './Boundary'
+import { Routing } from './Routing'
 
 export const App = () => (
-  <ThemeProvider theme={theme}>
-    <h1>Hello world</h1>
-  </ThemeProvider>
+  <AppProviders>
+    <Boundary>
+      <Routing />
+    </Boundary>
+  </AppProviders>
 )
