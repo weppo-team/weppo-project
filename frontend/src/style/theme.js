@@ -12,6 +12,6 @@ export const theme = {
     huge: '40px',
   },
   color: {
-    white: '#fff',
+    white: '#ffffff',
   },
 }
