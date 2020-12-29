@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import { FooterElements } from './elements'
 import { useAppInfo } from '../../context/AppInfoContext'
 
@@ -9,8 +8,7 @@ export const Footer = () => {
 
   return (
     <AntdFooter>
-      {title} ©2021 Created by three students.{' '}
-      <Link to={{ pathname: repoUrl }}>Details</Link>
+      {title} ©2021 Created by three students. <a href={repoUrl}>Details</a>
     </AntdFooter>
   )
 }
