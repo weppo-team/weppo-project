@@ -1,11 +1,12 @@
 import { render as reactRender } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom'
-import { AppProviders } from '../context/AppProviders'
+import { ThemeProvider } from 'styled-components'
+import { theme } from '../style/theme'
 
 export const render = (ui, options) =>
   reactRender(
     <BrowserRouter>
-      <AppProviders>{ui}</AppProviders>
+      <ThemeProvider theme={theme}>{ui}</ThemeProvider>
     </BrowserRouter>,
     options,
   )
