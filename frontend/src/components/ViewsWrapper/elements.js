@@ -7,7 +7,8 @@ const Content = styled(AntdContent)(
   ({ theme }) => css`
     margin: ${theme.antd.spacing.big} ${theme.antd.spacing.mid} 0;
     background-color: ${theme.color.white};
-    padding: ${theme.antd.spacing.mid};
+    padding: ${theme.antd.spacing.big};
+    overflow: auto;
   `,
 )
 
