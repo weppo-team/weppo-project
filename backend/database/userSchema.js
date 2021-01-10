@@ -6,21 +6,21 @@ const userSchema = new Schema({
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
 
   googleAuthID: String,
   date: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
 
-  ticTacToeScore: gameSchema
+  ticTacToeScore: gameSchema,
 });
 
 module.exports = userSchema;
