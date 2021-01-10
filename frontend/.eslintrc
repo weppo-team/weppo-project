@@ -1,6 +1,12 @@
 {
   "extends": ["@imaginary-cloud/react"],
+  "plugins": ["eslint-plugin-no-inline-styles"],
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "ecmaVersion": 2020
+  },
   "rules": {
+    "no-inline-styles/no-inline-styles": "error",
     "react/react-in-jsx-scope": "off"
   }
 }
