@@ -3,10 +3,10 @@ require('dotenv').config();
 
 const uri = process.env.DB_URI;
 
-const DBConnection = async () => {
+const dbConnection = async () => {
   try {
     await mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
-    console.log("Is connected:", mongoose.connection.readyState);
+    console.log("Is database connected:", mongoose.connection.readyState);
   } catch (error) {
     console.error(error);
   } finally {
@@ -14,4 +14,4 @@ const DBConnection = async () => {
   }
 };
 
-module.exports = DBConnection;
+module.exports = dbConnection;

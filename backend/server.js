@@ -1,11 +1,11 @@
 const { app } = require('./app');
-const DBConnection = require('./database/DBConnection')
+const dbConnection = require('./database/dbConnection')
 
 require('dotenv').config();
 
 const PORT = process.env.PORT || 9876;
 
 app.listen(PORT, () => {
-  DBConnection();
+  dbConnection();
   console.log(`Server listening on port: ${PORT}`);
 });
