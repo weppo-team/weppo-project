@@ -3,8 +3,8 @@ const { Schema } = mongoose;
 
 const gameSchema = new Schema({
   elo: Number,
-  numberOfWonGames: Number,
-  numberOfLostGames: Number,
+  amountOfWonGames: Number,
+  amountOfLostGames: Number,
 });
 
 module.exports = gameSchema;
