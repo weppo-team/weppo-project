@@ -1,22 +1,19 @@
 import styled, { css } from 'styled-components'
-import { Menu, Modal, Button } from 'antd'
+import { Button } from 'antd'
 
-const StyledMenu = styled(Menu)(
+const StyledDiv = styled.div(
   ({ customTheme: theme }) => css`
-    position: absolute;
-    width: 100%;
-    bottom: 0;
+    margin-top: auto;
+    margin-right: auto;
     margin-bottom: ${theme.spacing.big};
   `,
 )
 
-const StyledModal = styled(Modal)(() => css``)
-
 const StyledMenuButton = styled(Button)(
-  () => css`
+  ({ customTheme: theme }) => css`
     width: 90%;
-    margin 10px; 
+    margin: ${theme.spacing.mid};
   `,
 )
 
-export const LoginMenuElements = { StyledMenu, StyledModal, StyledMenuButton }
+export const LoginMenuElements = { StyledDiv, StyledMenuButton }

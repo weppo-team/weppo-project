@@ -17,6 +17,7 @@ const LogoWrapper = styled.div(
 
 const StyledSider = styled(Sider)(
   ({ theme }) => css`
+    display: flex;
     .ant-typography {
       color: ${theme.color.white};
     }

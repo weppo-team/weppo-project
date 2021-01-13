@@ -1,13 +1,11 @@
-import PropTypes from 'prop-types'
-import { useState } from 'react'
 import { LoginOutlined, FormOutlined, UserOutlined } from '@ant-design/icons'
 import { useTheme } from 'styled-components'
+import { useState } from 'react'
 import { LoginMenuElements } from './elements'
-import { LoginForm } from './forms/LoginForm'
-import { RegisterForm } from './forms/RegisterForm'
-import { GuestForm } from './forms/GuestForm'
+import { LoginForm, RegisterForm, GuestForm } from './forms'
+import { LoginModal } from './components/LoginModal'
 
-const { StyledMenu, StyledModal, StyledMenuButton } = LoginMenuElements
+const { StyledDiv, StyledMenuButton } = LoginMenuElements
 
 const items = [
   {
@@ -33,45 +31,19 @@ const items = [
   },
 ]
 
-const LoginModal = ({
-  modalTitle,
-  modalContent,
-  isModalVisible,
-  onModalVisible,
-}) => {
-  const handleOk = () => {
-    onModalVisible(false)
-  }
-
-  const handleCancel = () => {
-    onModalVisible(false)
-  }
-
-  return (
-    <StyledModal
-      visible={isModalVisible}
-      title={modalTitle}
-      onOk={handleOk}
-      onCancel={handleCancel}
-      footer={null}
-    >
-      {modalContent}
-    </StyledModal>
-  )
-}
-
 export const LoginMenu = () => {
   const theme = useTheme()
   const [isModalVisible, setIsModalVisible] = useState(false)
-  const [modalTitle, setModalTitle] = useState('Empty title')
-  const [modalContent, setModalContent] = useState('Empty content')
+  const [modalTitle, setModalTitle] = useState(null)
+  const [modalContent, setModalContent] = useState(null)
 
   return (
     <>
-      <StyledMenu theme="dark" mode="inline" customTheme={theme}>
+      <StyledDiv theme="dark" mode="inline" customTheme={theme}>
         {items.map((item) => (
           <StyledMenuButton
             shape="round"
+            customTheme={theme}
             key={item.key}
             icon={item.icon}
             onClick={() => {
@@ -83,7 +55,7 @@ export const LoginMenu = () => {
             {item.label}
           </StyledMenuButton>
         ))}
-      </StyledMenu>
+      </StyledDiv>
       <LoginModal
         modalTitle={modalTitle}
         modalContent={modalContent}
@@ -92,11 +64,4 @@ export const LoginMenu = () => {
       />
     </>
   )
-}
-
-LoginModal.propTypes = {
-  modalTitle: PropTypes.string.isRequired,
-  modalContent: PropTypes.string.isRequired,
-  isModalVisible: PropTypes.bool.isRequired,
-  onModalVisible: PropTypes.func.isRequired,
 }

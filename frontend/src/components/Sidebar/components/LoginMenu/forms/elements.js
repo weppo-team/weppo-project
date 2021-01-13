@@ -2,11 +2,10 @@ import styled, { css } from 'styled-components'
 import { Form, Button } from 'antd'
 
 const StyledForm = styled(Form)(
-  () => css`
-    max-width: 400px;
+  ({ customTheme: theme }) => css`
     width: 80%;
     margin: auto;
-    padding: 10px;
+    padding: ${theme.spacing.mid};
   `,
 )
 
@@ -16,7 +15,7 @@ const StyledButton = styled(Button)(
   `,
 )
 
-export const GuestFormElements = {
+export const FormElements = {
   StyledForm,
   StyledButton,
 }
