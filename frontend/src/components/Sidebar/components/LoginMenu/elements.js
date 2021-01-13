@@ -4,7 +4,6 @@ import { Button } from 'antd'
 const StyledDiv = styled.div(
   ({ customTheme: theme }) => css`
     margin-top: auto;
-    margin-right: auto;
     margin-bottom: ${theme.spacing.big};
   `,
 )
