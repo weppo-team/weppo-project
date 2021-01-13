@@ -17,17 +17,13 @@ export const LoginForm = () => (
       name="password"
       rules={[{ required: true, message: 'Please enter your password' }]}
     >
-      <Input
-        prefix={<LockOutlined />}
-        type="password"
-        placeholder="Password"
-      />
+      <Input prefix={<LockOutlined />} type="password" placeholder="Password" />
     </StyledForm.Item>
 
     <StyledForm.Item>
       <StyledButton icon={<LoginOutlined />} type="primary" htmlType="submit">
         Log in
-        </StyledButton>
+      </StyledButton>
     </StyledForm.Item>
   </StyledForm>
 )
