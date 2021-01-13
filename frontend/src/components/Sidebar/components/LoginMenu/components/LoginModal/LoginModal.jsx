@@ -1,8 +1,6 @@
-import { Typography } from 'antd'
+import { Typography, Modal } from 'antd'
 import PropTypes from 'prop-types'
-import { LoginModalElements } from './elements'
 
-const { StyledModal } = LoginModalElements
 const { Title } = Typography
 
 export const LoginModal = ({
@@ -18,14 +16,14 @@ export const LoginModal = ({
   const styledTitle = <Title level={2}>{modalTitle}</Title>
 
   return (
-    <StyledModal
+    <Modal
       visible={isModalVisible}
       title={styledTitle}
       onCancel={handleCancel}
       footer={null}
     >
       {modalContent}
-    </StyledModal>
+    </Modal>
   )
 }
 

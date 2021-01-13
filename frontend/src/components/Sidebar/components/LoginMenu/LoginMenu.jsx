@@ -1,5 +1,4 @@
 import { LoginOutlined, FormOutlined, UserOutlined } from '@ant-design/icons'
-import { useTheme } from 'styled-components'
 import { useState } from 'react'
 import { LoginMenuElements } from './elements'
 import { LoginForm, RegisterForm, GuestForm } from './forms'
@@ -32,18 +31,16 @@ const items = [
 ]
 
 export const LoginMenu = () => {
-  const theme = useTheme()
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [modalTitle, setModalTitle] = useState(null)
   const [modalContent, setModalContent] = useState(null)
 
   return (
     <>
-      <StyledDiv theme="dark" mode="inline" customTheme={theme}>
+      <StyledDiv>
         {items.map((item) => (
           <StyledMenuButton
             shape="round"
-            customTheme={theme}
             key={item.key}
             icon={item.icon}
             onClick={() => {

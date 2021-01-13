@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components'
 import { Form, Button } from 'antd'
 
 const StyledForm = styled(Form)(
-  ({ customTheme: theme }) => css`
+  ({ theme }) => css`
     width: 80%;
     margin: auto;
     padding: ${theme.spacing.mid};
