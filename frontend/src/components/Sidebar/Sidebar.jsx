@@ -1,5 +1,6 @@
 import { Typography } from 'antd'
 import { NavigationMenu } from './components/NavigationMenu'
+import { LoginMenu } from './components/LoginMenu'
 import { SidebarElements } from './elements'
 import { useAppInfo } from '../../context/AppInfoContext'
 
@@ -17,6 +18,7 @@ export const Sidebar = () => {
         <StyledDivider />
       </LogoWrapper>
       <NavigationMenu />
+      <LoginMenu />
     </StyledSider>
   )
 }
