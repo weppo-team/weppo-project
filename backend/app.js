@@ -14,7 +14,8 @@ app.get('/api/hello', (_, res) => {
   res.json({ message: 'Hello world' });
 });
 
-app.get('/', (_, res) => {
+// Handles any requests that don't match the ones above
+app.get('*', (_, res) => {
   res.sendFile(`${FRONTEND_BUILD_PATH}/index.html`);
 });
 
