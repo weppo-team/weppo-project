@@ -5,11 +5,18 @@ const app = express();
 // performance boost
 app.use(compression());
 
+const FRONTEND_BUILD_PATH = `${__dirname}/../frontend/build`;
+
 // serve the react app files
-app.use(express.static(`${__dirname}/../frontend/build`));
+app.use(express.static(FRONTEND_BUILD_PATH));
 
 app.get('/api/hello', (_, res) => {
   res.json({ message: 'Hello world' });
+});
+
+// Handles any requests that don't match the ones above
+app.get('*', (_, res) => {
+  res.sendFile(`${FRONTEND_BUILD_PATH}/index.html`);
 });
 
 module.exports = { app };
