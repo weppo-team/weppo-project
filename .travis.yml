@@ -11,10 +11,11 @@ before_script:
   - cd ../backend && yarn eslint && yarn test
 script:
   - cd ../frontend && yarn build
-  - cd ../backend
+  - cd ../
 
 before_deploy:
   - wget -qO- https://toolbelt.heroku.com/install.sh | sh
+  - /usr/local/heroku/bin/heroku kill DYNO --app $HEROKU_NAME
   - /usr/local/heroku/bin/heroku ps:scale web=0 --app $HEROKU_NAME
 deploy:
   skip_cleanup: true
@@ -22,7 +23,8 @@ deploy:
   api_key: $HEROKU_API_KEY
   app: $HEROKU_NAME
   run:
-    - ls ../
+    - cd backend/
+    - yarn start
   on:
     branch: deploy
 after_deploy:
