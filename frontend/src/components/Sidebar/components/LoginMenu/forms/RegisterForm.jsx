@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Input } from 'antd'
 import {
   UserOutlined,
@@ -9,40 +10,90 @@ import { FormElements } from './elements'
 
 const { StyledForm, StyledButton } = FormElements
 
-export const RegisterForm = () => (
-  <StyledForm>
-    <StyledForm.Item
-      name="username"
-      rules={[{ required: true, message: 'Username is required' }]}
-    >
-      <Input placeholder="Username" prefix={<UserOutlined />} />
-    </StyledForm.Item>
+export const RegisterForm = () => {
+  const usernameRegex = /^(?=.{6,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9]+(?<![_.])$/
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,32}$/
 
-    <StyledForm.Item
-      name="email"
-      rules={[
-        {
-          type: 'email',
-          required: true,
-          message: 'Proper e-mail is required',
-        },
-      ]}
-    >
-      <Input placeholder="E-mail" prefix={<MailOutlined />} />
-    </StyledForm.Item>
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('')
+  const [buttonState, setButtonState] = useState(true)
 
-    <StyledForm.Item
-      name="password"
-      placeholder="password"
-      rules={[{ required: true, message: 'Proper password is required' }]}
-    >
-      <Input placeholder="Password" prefix={<LockOutlined />} type="password" />
-    </StyledForm.Item>
+  const checkButton = () => {
+    let valid = false
+    if (
+      usernameRegex.test(username) &&
+      passwordRegex.test(password) &&
+      email != null
+    )
+      valid = true
+    setButtonState(!valid)
+  }
 
-    <StyledForm.Item>
-      <StyledButton icon={<FormOutlined />} type="primary" htmlType="submit">
-        Register
-      </StyledButton>
-    </StyledForm.Item>
-  </StyledForm>
-)
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    alert(`Form valid, register with: \n${username} \n${email} \n${password}`)
+  }
+
+  return (
+    <StyledForm onFieldsChange={checkButton}>
+      <StyledForm.Item
+        name="username"
+        rules={[
+          { required: true, message: 'Username required' },
+          {
+            pattern: /^(?=.{6,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9]+(?<![_.])$/,
+            message: '6-20 characters long, only latin letters and numbers',
+          },
+        ]}
+        onChange={(event) => setUsername(event.target.value)}
+      >
+        <Input prefix={<UserOutlined />} placeholder="Username" />
+      </StyledForm.Item>
+
+      <StyledForm.Item
+        name="email"
+        rules={[
+          {
+            type: 'email',
+            required: true,
+            message: 'Proper e-mail is required',
+          },
+        ]}
+        onChange={(event) => setEmail(event.target.value)}
+      >
+        <Input placeholder="E-mail" prefix={<MailOutlined />} />
+      </StyledForm.Item>
+
+      <StyledForm.Item
+        name="password"
+        rules={[
+          { required: true, message: 'Password required' },
+          {
+            pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,32}$/,
+            message: '8-32 characters long, at least one letter and one number',
+          },
+        ]}
+        onChange={(event) => setPassword(event.target.value)}
+      >
+        <Input
+          placeholder="Password"
+          prefix={<LockOutlined />}
+          type="password"
+        />
+      </StyledForm.Item>
+
+      <StyledForm.Item>
+        <StyledButton
+          icon={<FormOutlined />}
+          onClick={handleSubmit}
+          disabled={buttonState}
+          type="primary"
+          htmlType="submit"
+        >
+          Register
+        </StyledButton>
+      </StyledForm.Item>
+    </StyledForm>
+  )
+}
