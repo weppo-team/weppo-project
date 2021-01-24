@@ -16,7 +16,7 @@ app.get('/api/hello', (_, res) => {
 
 // Handles any requests that don't match the ones above
 app.get('*', (_, res) => {
-  res.sendFile(`${FRONTEND_BUILD_PATH}/index.html`);
+  res.sendFile('index.html', { root: FRONTEND_BUILD_PATH });
 });
 
 module.exports = { app };
