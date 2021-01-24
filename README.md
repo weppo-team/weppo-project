@@ -6,7 +6,7 @@ As a user you have ELO ranking for all games that let you track your progress an
 
 ## Domain
 
-Web app should be served here: [https://weppoproject.herokuapp.com/](https://weppoproject.herokuapp.com/). If it is not available at this domain, we probably deleted it, because of heroku free plan that we are using :smile:
+Web app should be served here: [https://weppoproject.herokuapp.com/](https://weppoproject.herokuapp.com/). If it is not available at this domain, we probably deleted it, because heroku plan we are using no longer permit us to host it :smile:
 
 ## Authors
 
@@ -16,9 +16,17 @@ The app has been developed by [Dawid Motak](https://github.com/Motii1), [Krystia
 
 It's a web application with the front-end structured with React and the back-end made in NodeJS. We used MongoDB as our database.
 
+## Environment
+
+You should create `.env` file inside `backend/` directory. It should include the following variables:
+
+```
+DB_URI=...
+```
+
 ## Local setup
 
-Firstly you need to install all required packages. To achieve that you should run `yarn install` command inside `frontend` and `backend` directories. Then you should start client and server.
+Firstly you need to install all required packages. To achieve that you should run `yarn install` command inside `frontend` and `backend` directories. Then you should start client and server:
 
 ```
 cd frontend/
