@@ -1,0 +1,28 @@
+sudo: required
+language: node_js
+cache: yarn
+node_js:
+  - node
+install:
+  - cd frontend && yarn install
+  - cd ../backend && yarn install
+before_script:
+  - cd ../frontend && yarn eslint && yarn test
+  - cd ../backend && yarn eslint && yarn test
+script:
+  - cd ../frontend && yarn build
+  - cd ../
+
+before_deploy:
+  - wget -qO- https://toolbelt.heroku.com/install.sh | sh
+  - /usr/local/heroku/bin/heroku kill DYNO --app $HEROKU_NAME
+  - /usr/local/heroku/bin/heroku ps:scale web=0 --app $HEROKU_NAME
+deploy:
+  skip_cleanup: true
+  provider: heroku
+  api_key: $HEROKU_API_KEY
+  app: $HEROKU_NAME
+  on:
+    branch: main
+after_deploy:
+  - /usr/local/heroku/bin/heroku ps:scale web=1 --app $HEROKU_NAME
