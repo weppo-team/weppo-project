@@ -1,11 +1,12 @@
 import { Typography, Input } from 'antd'
+import PropTypes from 'prop-types'
 import { UserOutlined, LoginOutlined } from '@ant-design/icons'
 import { FormElements } from './elements'
 
 const { StyledForm, StyledButton } = FormElements
 const { Title } = Typography
 
-export const GuestForm = () => (
+export const GuestForm = ({ handleLogin }) => (
   <>
     <Title level={4}>
       You will be logged as a guest, without access to statistics and other
@@ -20,9 +21,18 @@ export const GuestForm = () => (
         <Input prefix={<UserOutlined />} placeholder="Nickname" />
       </StyledForm.Item>
 
-      <StyledButton icon={<LoginOutlined />} type="primary" htmlType="submit">
+      <StyledButton
+        icon={<LoginOutlined />}
+        type="primary"
+        htmlType="submit"
+        onSubmit={handleLogin()}
+      >
         Continue as a guest
       </StyledButton>
     </StyledForm>
   </>
 )
+
+GuestForm.propTypes = {
+  handleLogin: PropTypes.func.isRequired,
+}

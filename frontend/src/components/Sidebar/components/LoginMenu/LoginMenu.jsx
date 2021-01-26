@@ -12,21 +12,21 @@ const items = [
     label: 'Login',
     icon: <LoginOutlined />,
     modalTitle: 'Login as user',
-    modalContent: <LoginForm />,
+    modalContent: (callback) => <LoginForm handleLogin={callback} />,
   },
   {
     key: '2',
     label: 'Register',
     icon: <FormOutlined />,
     modalTitle: 'Register as user',
-    modalContent: <RegisterForm />,
+    modalContent: (callback) => <RegisterForm handleLogin={callback} />,
   },
   {
     key: '3',
     label: 'Play as a guest',
     icon: <UserOutlined />,
     modalTitle: 'Log as a guest',
-    modalContent: <GuestForm />,
+    modalContent: (callback) => <GuestForm handleLogin={callback} />,
   },
 ]
 
@@ -34,7 +34,6 @@ export const LoginMenu = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [modalTitle, setModalTitle] = useState(null)
   const [modalContent, setModalContent] = useState(null)
-
   return (
     <>
       <StyledDiv>
@@ -45,7 +44,9 @@ export const LoginMenu = () => {
             icon={item.icon}
             onClick={() => {
               setModalTitle(item.modalTitle)
-              setModalContent(item.modalContent)
+              console.log(item.modalContent)
+              // eslint-disable-next-line no-unused-vars
+              setModalContent((_) => item.modalContent)
               setIsModalVisible(true)
             }}
           >

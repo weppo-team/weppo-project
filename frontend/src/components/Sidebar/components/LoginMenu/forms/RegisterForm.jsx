@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Input } from 'antd'
+import PropTypes from 'prop-types'
 import {
   UserOutlined,
   MailOutlined,
@@ -7,10 +8,11 @@ import {
   FormOutlined,
 } from '@ant-design/icons'
 import { FormElements } from './elements'
+import { register } from '../../../../../services/auth/auth.service'
 
 const { StyledForm, StyledButton } = FormElements
 
-export const RegisterForm = () => {
+export const RegisterForm = ({ handleLogin }) => {
   const usernameRegex = /^(?=.{6,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9]+(?<![_.])$/
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,32}$/
 
@@ -32,7 +34,11 @@ export const RegisterForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault()
+    handleLogin()
     alert(`Form valid, register with: \n${username} \n${email} \n${password}`)
+    register(username, email, password).then((response) => {
+      if (response.data.succesful) alert('Registered and logged in')
+    })
   }
 
   return (
@@ -96,4 +102,8 @@ export const RegisterForm = () => {
       </StyledForm.Item>
     </StyledForm>
   )
+}
+
+RegisterForm.propTypes = {
+  handleLogin: PropTypes.func.isRequired,
 }

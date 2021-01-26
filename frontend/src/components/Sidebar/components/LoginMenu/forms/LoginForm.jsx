@@ -1,11 +1,13 @@
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 import { Input } from 'antd'
 import { UserOutlined, LockOutlined, LoginOutlined } from '@ant-design/icons'
 import { FormElements } from './elements'
+import { login } from '../../../../../services/auth/auth.service'
 
 const { StyledForm, StyledButton } = FormElements
 
-export const LoginForm = () => {
+export const LoginForm = ({ handleLogin }) => {
   const usernameRegex = /^(?=.{6,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9]+(?<![_.])$/
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,32}$/
 
@@ -20,8 +22,13 @@ export const LoginForm = () => {
     if (usernameRegex.test(username) && passwordRegex.test(password))
       valid = true
 
-    if (valid) alert(`Form valid, log in with: \n${username} \n${password}`)
-    else alert('Form invalid')
+    if (valid) {
+      alert(`Form valid, log in with: \n${username} \n${password}`)
+      handleLogin()
+      login(username, password).then((response) => {
+        if (response.data.succesful) alert('Logged in')
+      })
+    } else alert('Form invalid')
   }
 
   const checkButton = () => {
@@ -75,4 +82,8 @@ export const LoginForm = () => {
       </StyledForm.Item>
     </StyledForm>
   )
+}
+
+LoginForm.propTypes = {
+  handleLogin: PropTypes.func.isRequired,
 }
