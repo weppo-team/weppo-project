@@ -8,7 +8,7 @@ import {
   FormOutlined,
 } from '@ant-design/icons'
 import { FormElements } from './elements'
-import { register } from '../../../../../services/auth/auth.service'
+import { register } from '../../../../../services/auth/authServices'
 
 const { StyledForm, StyledButton } = FormElements
 

@@ -12,11 +12,13 @@ app.use(compression());
 app.use(cookieParser()); 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({
+  origin: true, 
+  credentials: true,
+}));
+require('./services/auth/authRoutes')(app);
 
 const FRONTEND_BUILD_PATH = `${__dirname}/../frontend/build`;
-
-require('./database/auth/authenticationRoutes')(app);
 
 // serve the react app files
 app.use(express.static(FRONTEND_BUILD_PATH));

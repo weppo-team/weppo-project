@@ -1,8 +1,17 @@
-import { LoginOutlined, FormOutlined, UserOutlined } from '@ant-design/icons'
+import {
+  LoginOutlined,
+  FormOutlined,
+  UserOutlined,
+  LogoutOutlined,
+} from '@ant-design/icons'
 import { useState } from 'react'
 import { LoginMenuElements } from './elements'
 import { LoginForm, RegisterForm, GuestForm } from './forms'
 import { LoginModal } from './components/LoginModal'
+import {
+  checkIfUserLoggedIn,
+  logout,
+} from '../../../../services/auth/authServices'
 
 const { StyledDiv, StyledMenuButton } = LoginMenuElements
 
@@ -34,7 +43,21 @@ export const LoginMenu = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [modalTitle, setModalTitle] = useState(null)
   const [modalContent, setModalContent] = useState(null)
-  return (
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  const updateLoggedStatus = () => {
+    checkIfUserLoggedIn().then(
+      (response) => {
+        console.log(response.data.userLogged)
+        setIsLoggedIn(response.data.userLogged)
+      },
+      () => setIsLoggedIn(false),
+    )
+  }
+
+  updateLoggedStatus()
+
+  const standardMenu = (
     <>
       <StyledDiv>
         {items.map((item) => (
@@ -62,4 +85,19 @@ export const LoginMenu = () => {
       />
     </>
   )
+
+  const logoutLabel = 'Logout'
+  const logoutMenu = (
+    <StyledDiv>
+      <StyledMenuButton
+        shape="round"
+        icon={<LogoutOutlined />}
+        onClick={logout}
+      >
+        {logoutLabel}
+      </StyledMenuButton>
+    </StyledDiv>
+  )
+
+  return isLoggedIn ? logoutMenu : standardMenu
 }

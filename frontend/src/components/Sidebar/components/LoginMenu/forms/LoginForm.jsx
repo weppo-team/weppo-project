@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { message, Input } from 'antd'
 import { UserOutlined, LockOutlined, LoginOutlined } from '@ant-design/icons'
 import { FormElements } from './elements'
-import { login } from '../../../../../services/auth/auth.service'
+import { login } from '../../../../../services/auth/authServices'
 
 const { StyledForm, StyledButton } = FormElements
 

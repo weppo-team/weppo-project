@@ -1,7 +1,8 @@
+require('dotenv').config({ path: './.env' });
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const config = require('./config.js');
-const { User } = require('../userModel.js');
+const { secret } = require('./config.js');
+const { User } = require('../../database/userModel.js');
 
 register = (req, res) => {
   const newUser = new User({
@@ -11,7 +12,6 @@ register = (req, res) => {
   });
 
   newUser.save((err, newUser) => {
-    console.log('started saving')
     if (err) {
       console.log(err)
       res.status(500).send({ message: err });
@@ -25,7 +25,6 @@ register = (req, res) => {
         succesful: true, 
         message: `New user "${newUser.username}" has been registered`, 
       });
-      console.log('200 sent')
     }
   })
 };
@@ -56,8 +55,8 @@ login = (req, res) => {
         });
       }
 
-      //const token = jwt.sign({ id: user.id }, config.secret)
-
+      const token = jwt.sign({ id: user.id }, secret)
+      res.cookie('auth-token', token, { httpOnly: true, secure: true })
       res.status(200).send({
         id: user._id,
         username: user.username,
@@ -65,12 +64,58 @@ login = (req, res) => {
         succesful: true,
         message: 'Login successful'
       });
-
-      //res.cookie('auth-token', token,  { httpOnly: true, secure: true })
     });
+};
+
+logout = (req, res) => {
+  res.clearCookie('auth-token', { httpOnly: true, secure: true }); 
+  res.status(200).send({
+    message: 'Logout successful'
+  });
+}
+
+getUserData = (req, res) => {
+  User.findById(req.userId)  
+    .exec((err, user) => {
+      if (err) {
+        res.status(500).send({ message: 'Internal error, please try again later' });
+        return;
+      }
+
+      if (!user) {
+        return res.status(404).send({ message: 'User not found' });
+      }
+
+      res.status(200).send({
+        id: user._id,
+        username: user.username,
+        email: user.email,
+      });
+    }
+  );
+};
+
+getLoginStatus = (req, res) => {
+  User.findById(req.userId)  
+    .exec((err, user) => {
+      if (err) {
+        res.status(500).send({ message: 'Internal error, please try again later' });
+        return;
+      }
+
+      if (!user) {
+        return res.status(200).send({ userLogged: false });
+      }
+
+      res.status(200).send({ userLogged: true });
+    }
+  );
 };
 
 module.exports = {
   register,
-  login
+  login, 
+  logout,
+  getUserData,
+  getLoginStatus
 }

@@ -1,4 +1,4 @@
-const { User } = require('../userModel');
+const { User } = require('../../database/userModel');
 
 checkForDuplicatedUsernameOrEmail = (req, res, next) => {
   User.findOne({
