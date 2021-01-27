@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Input } from 'antd'
+import { message, Input } from 'antd'
 import PropTypes from 'prop-types'
 import {
   UserOutlined,
@@ -35,10 +35,21 @@ export const RegisterForm = ({ handleLogin }) => {
   const handleSubmit = (event) => {
     event.preventDefault()
     handleLogin()
-    alert(`Form valid, register with: \n${username} \n${email} \n${password}`)
-    register(username, email, password).then((response) => {
-      if (response.data.succesful) alert('Registered and logged in')
-    })
+    message.info('Attempting register...', 5)
+    register(username, email, password).then(
+      (response) => {
+        message.success(response.data.message, 5)
+      },
+      (error) => {
+        const errorMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString()
+        message.error(errorMessage, 5)
+      },
+    )
   }
 
   return (

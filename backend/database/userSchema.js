@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const { gameSchema } = require('./gameSchema');
 const { Schema } = mongoose;
+const { gameSchema } = require('./gameSchema');
 
 const userSchema = new Schema({
   username: {
@@ -24,8 +24,6 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-
-  ticTacToeScore: gameSchema,
 });
 
 module.exports = userSchema;

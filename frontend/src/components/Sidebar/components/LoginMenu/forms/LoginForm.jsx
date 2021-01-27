@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Input } from 'antd'
+import { message, Input } from 'antd'
 import { UserOutlined, LockOutlined, LoginOutlined } from '@ant-design/icons'
 import { FormElements } from './elements'
 import { login } from '../../../../../services/auth/auth.service'
@@ -8,27 +8,28 @@ import { login } from '../../../../../services/auth/auth.service'
 const { StyledForm, StyledButton } = FormElements
 
 export const LoginForm = ({ handleLogin }) => {
-  const usernameRegex = /^(?=.{6,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9]+(?<![_.])$/
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,32}$/
-
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [buttonState, setButtonState] = useState(true)
 
   const handleSubmit = (event) => {
     event.preventDefault()
-
-    let valid = false
-    if (usernameRegex.test(username) && passwordRegex.test(password))
-      valid = true
-
-    if (valid) {
-      alert(`Form valid, log in with: \n${username} \n${password}`)
-      handleLogin()
-      login(username, password).then((response) => {
-        if (response.data.succesful) alert('Logged in')
-      })
-    } else alert('Form invalid')
+    message.info('Attempting login...')
+    handleLogin()
+    login(username, password).then(
+      (response) => {
+        message.success(response.data.message, 5)
+      },
+      (error) => {
+        const errorMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString()
+        message.error(errorMessage, 5)
+      },
+    )
   }
 
   const checkButton = () => {
