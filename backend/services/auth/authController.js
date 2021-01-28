@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const { secret } = require('./config.js');
 const { User } = require('../../database/userModel.js');
 
-register = (req, res) => {
+const register = (req, res) => {
   const newUser = new User({
     username: req.body.username,
     email: req.body.email,
@@ -15,7 +15,6 @@ register = (req, res) => {
     if (err) {
       console.log(err)
       res.status(500).send({ message: err });
-      return;
     }
     else{
       res.status(200).send({
@@ -29,7 +28,7 @@ register = (req, res) => {
   })
 };
 
-login = (req, res) => {
+const login = (req, res) => {
   User.findOne({
     username: req.body.username
   })
@@ -43,7 +42,7 @@ login = (req, res) => {
         return res.status(404).send({ message: 'User not found' });
       }
 
-      var passwordValid = bcrypt.compareSync(
+      const passwordValid = bcrypt.compareSync(
         req.body.password,
         user.password
       );
@@ -67,14 +66,14 @@ login = (req, res) => {
     });
 };
 
-logout = (req, res) => {
+const logout = (req, res) => {
   res.clearCookie('auth-token', { httpOnly: true, secure: true }); 
   res.status(200).send({
     message: 'Logout successful'
   });
 }
 
-getUserData = (req, res) => {
+const getUserData = (req, res) => {
   User.findById(req.userId)  
     .exec((err, user) => {
       if (err) {
@@ -95,7 +94,7 @@ getUserData = (req, res) => {
   );
 };
 
-getLoginStatus = (req, res) => {
+const getLoginStatus = (req, res) => {
   User.findById(req.userId)  
     .exec((err, user) => {
       if (err) {

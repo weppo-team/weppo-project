@@ -1,6 +1,6 @@
 const { User } = require('../../database/userModel');
 
-checkForDuplicatedUsernameOrEmail = (req, res, next) => {
+const checkForDuplicatedUsernameOrEmail = (req, res, next) => {
   User.findOne({
     username: req.body.username
   }).exec((err, foundUsername) => {

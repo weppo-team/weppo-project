@@ -3,7 +3,7 @@ const { login, register, logout, getUserData, getLoginStatus } = require('./auth
 const { verifyToken } = require('./authJWT'); 
 
 module.exports = function(app) {
-  app.use(function(req, res, next) {
+  app.use((req, res, next) => {
     res.header(
       'Access-Control-Allow-Headers', 
     );

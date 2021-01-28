@@ -24,6 +24,8 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+
+  ticTacToeScore: gameSchema,
 });
 
-module.exports = userSchema;
+module.exports = { userSchema };
