@@ -48,7 +48,6 @@ export const LoginMenu = () => {
   const updateLoggedStatus = () => {
     checkIfUserLoggedIn().then(
       (response) => {
-        console.log(response.data.userLogged)
         setIsLoggedIn(response.data.userLogged)
       },
       () => setIsLoggedIn(false),
@@ -67,7 +66,6 @@ export const LoginMenu = () => {
             icon={item.icon}
             onClick={() => {
               setModalTitle(item.modalTitle)
-              console.log(item.modalContent)
               // eslint-disable-next-line no-unused-vars
               setModalContent((_) => item.modalContent)
               setIsModalVisible(true)
