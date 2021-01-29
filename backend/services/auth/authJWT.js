@@ -2,9 +2,14 @@ const jwt = require('jsonwebtoken');
 const config = require('./config.js');
 const { secret } = require('./config.js');
 
-const createToken = (id, username, usertype) => {
-  return jwt.sign({ id: id, username: username, usertype: usertype }, secret)
-}
+const createToken = (idToken, usernameToken, usertypeToken) => 
+  jwt.sign({ 
+    id: idToken, 
+    username: usernameToken, 
+    usertype: usertypeToken 
+  }, 
+  secret)
+
 
 const verifyToken = (req, res, next) => {
   const token = req.cookies['auth-token']; 

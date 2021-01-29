@@ -108,26 +108,25 @@ const getUserData = (req, res) => {
 };
 
 const getLoginStatus = (req, res) => {
-  if(req.usertype = 'guest')
+  if(req.usertype === 'guest')
     return res.status(200).send({ 
       userLogged: true,
       userType: req.usertype, 
     });
-  else
-    User.findById(req.userId)  
-      .exec((err, user) => {
-        if (err) 
-          return res.status(500).send({ message: 'Internal error, please try again later' });
+  User.findById(req.userId)  
+    .exec((err, user) => {
+      if (err) 
+        return res.status(500).send({ message: 'Internal error, please try again later' });
 
-        if (!user) 
-          return res.status(200).send({ userLogged: false });
-        
-        return res.status(200).send({ 
-          userLogged: true,
-          userType: req.usertype, 
-        });
-      }
-    );
+      if (!user) 
+        return res.status(200).send({ userLogged: false });
+      
+      return res.status(200).send({ 
+        userLogged: true,
+        userType: req.usertype, 
+      });
+    }
+  );
 };
 
 module.exports = {
