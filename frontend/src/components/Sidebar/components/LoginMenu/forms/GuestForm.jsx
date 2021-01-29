@@ -34,8 +34,7 @@ export const GuestForm = ({ handleSubmitButton }) => {
   }
 
   const checkButton = () => {
-    setButtonState(false)
-    console.log(usernameRegex.test(username))
+    setButtonState(!usernameRegex.test(username))
   }
 
   return (

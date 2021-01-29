@@ -21,7 +21,7 @@ const checkForDuplicatedEmail = (req, res, next) => {
     email: req.body.email
   }).exec((err, foundEmail) => {
     if (err) {
-      console.log(err)
+      console.error(err)
       res.status(500).send({ message: err });
       return;
     }

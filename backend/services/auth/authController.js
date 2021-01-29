@@ -67,8 +67,7 @@ const login = (req, res) => {
 
 const guest = (req, res) => {
 
-    const token = createToken(0, req.username, 'guest') 
-    console.log(token)
+    const token = createToken(-1, req.username, 'guest') 
     res.cookie('auth-token', token, { httpOnly: true, secure: true })
     res.status(200).send({
       id: 0,
@@ -102,6 +101,7 @@ const getUserData = (req, res) => {
         id: user._id,
         username: user.username,
         email: user.email,
+        usertype: user.usertype, 
       });
     }
   );
@@ -109,20 +109,23 @@ const getUserData = (req, res) => {
 
 const getLoginStatus = (req, res) => {
   if(req.usertype = 'guest')
-    res.status(200).send({ userLogged: true });
+    return res.status(200).send({ 
+      userLogged: true,
+      userType: req.usertype, 
+    });
   else
     User.findById(req.userId)  
       .exec((err, user) => {
-        if (err) {
-          res.status(500).send({ message: 'Internal error, please try again later' });
-          return;
-        }
+        if (err) 
+          return res.status(500).send({ message: 'Internal error, please try again later' });
 
-        if (!user) {
+        if (!user) 
           return res.status(200).send({ userLogged: false });
-        }
-
-        res.status(200).send({ userLogged: true });
+        
+        return res.status(200).send({ 
+          userLogged: true,
+          userType: req.usertype, 
+        });
       }
     );
 };
