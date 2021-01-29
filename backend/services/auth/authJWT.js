@@ -1,7 +1,12 @@
 const jwt = require('jsonwebtoken');
 const config = require('./config.js');
+const { secret } = require('./config.js');
 
-const verifyToken  = (req, res, next) => {
+const createToken = (id, username, usertype) => {
+  return jwt.sign({ id: id, username: username, usertype: usertype }, secret)
+}
+
+const verifyToken = (req, res, next) => {
   const token = req.cookies['auth-token']; 
 
   if (!token) {
@@ -12,9 +17,14 @@ const verifyToken  = (req, res, next) => {
     if (err) {
       return res.status(401).send({ message: 'Wrong token' });
     }
-    req.userId = decoded.id;
+    req.id = decoded.id
+    req.username = decoded.username;
+    req.usertype = decoded.usertype;
   next();
   });
 };
 
-module.exports = { verifyToken }
+module.exports = { 
+  verifyToken, 
+  createToken, 
+}

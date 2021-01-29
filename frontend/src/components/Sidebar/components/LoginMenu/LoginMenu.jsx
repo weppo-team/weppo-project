@@ -4,6 +4,7 @@ import {
   UserOutlined,
   LogoutOutlined,
 } from '@ant-design/icons'
+import { message } from 'antd'
 import { useState, useEffect } from 'react'
 import { LoginMenuElements } from './elements'
 import { LoginForm, RegisterForm, GuestForm } from './forms'
@@ -49,7 +50,6 @@ export const LoginMenu = () => {
     checkIfUserLoggedIn().then(
       (response) => {
         setIsLoggedIn(response.data.userLogged)
-        console.log(response.data)
       },
       () => setIsLoggedIn(false),
     )
@@ -92,8 +92,13 @@ export const LoginMenu = () => {
         shape="round"
         icon={<LogoutOutlined />}
         onClick={() => {
-          logout()
-          setIsLoggedIn(false)
+          logout().then(
+            (response) => {
+              setIsLoggedIn(false)
+              message.info(response.data.message)
+            },
+            () => message.error('Error during logout, please try again'),
+          )
         }}
       >
         {logoutLabel}

@@ -1,8 +1,7 @@
 require('dotenv').config(); 
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { secret } = require('./config.js');
 const { User } = require('../../database/userModel.js');
+const { createToken } = require('./authJWT')
 
 const register = (req, res) => {
   const newUser = new User({
@@ -54,7 +53,7 @@ const login = (req, res) => {
         });
       }
 
-      const token = jwt.sign({ id: user.id }, secret)
+      const token = createToken(user.id, user.username, 'user') 
       res.cookie('auth-token', token, { httpOnly: true, secure: true })
       res.status(200).send({
         id: user._id,
@@ -65,6 +64,20 @@ const login = (req, res) => {
       });
     });
 };
+
+const guest = (req, res) => {
+
+    const token = createToken(0, req.username, 'guest') 
+    console.log(token)
+    res.cookie('auth-token', token, { httpOnly: true, secure: true })
+    res.status(200).send({
+      id: 0,
+      username: req.username,
+      succesful: true,
+      message: 'Login as guest successful',
+    })
+};
+
 
 const logout = (req, res) => {
   res.clearCookie('auth-token', { httpOnly: true, secure: true }); 
@@ -95,25 +108,29 @@ const getUserData = (req, res) => {
 };
 
 const getLoginStatus = (req, res) => {
-  User.findById(req.userId)  
-    .exec((err, user) => {
-      if (err) {
-        res.status(500).send({ message: 'Internal error, please try again later' });
-        return;
-      }
+  if(req.usertype = 'guest')
+    res.status(200).send({ userLogged: true });
+  else
+    User.findById(req.userId)  
+      .exec((err, user) => {
+        if (err) {
+          res.status(500).send({ message: 'Internal error, please try again later' });
+          return;
+        }
 
-      if (!user) {
-        return res.status(200).send({ userLogged: false });
-      }
+        if (!user) {
+          return res.status(200).send({ userLogged: false });
+        }
 
-      res.status(200).send({ userLogged: true });
-    }
-  );
+        res.status(200).send({ userLogged: true });
+      }
+    );
 };
 
 module.exports = {
   register,
   login, 
+  guest, 
   logout,
   getUserData,
   getLoginStatus

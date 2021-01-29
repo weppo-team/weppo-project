@@ -1,5 +1,5 @@
-const { checkForDuplicatedUsernameOrEmail } = require('./verifyRegister');
-const { login, register, logout, getUserData, getLoginStatus } = require('./authController');
+const { checkForDuplicatedUsername, checkForDuplicatedEmail } = require('./verifyUserData');
+const { login, register, guest, logout, getUserData, getLoginStatus } = require('./authController');
 const { verifyToken } = require('./authJWT'); 
 
 module.exports = function(app) {
@@ -12,8 +12,14 @@ module.exports = function(app) {
 
   app.post(
     '/api/register',
-    [checkForDuplicatedUsernameOrEmail],
+    [checkForDuplicatedUsername, checkForDuplicatedEmail],
     register
+  );
+
+  app.post(
+    '/api/guest',
+    [checkForDuplicatedUsername],
+    guest
   );
 
   app.post('/api/login', login);
@@ -31,5 +37,4 @@ module.exports = function(app) {
     [verifyToken], 
     getLoginStatus
   )
-
 };

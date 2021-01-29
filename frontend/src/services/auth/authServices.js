@@ -17,6 +17,11 @@ export const login = (username, password) =>
     password,
   })
 
+export const guest = (username) =>
+  axiosForCookies.post('/api/guest', {
+    username,
+  })
+
 export const logout = () => axiosForCookies.post('/api/logout')
 
 export const getUserData = () => axiosForCookies.post('/api/user')
