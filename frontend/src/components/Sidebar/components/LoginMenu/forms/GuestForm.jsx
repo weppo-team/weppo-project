@@ -6,7 +6,7 @@ import { FormElements } from './elements'
 const { StyledForm, StyledButton } = FormElements
 const { Title } = Typography
 
-export const GuestForm = ({ handleLogin }) => (
+export const GuestForm = ({ handleSubmitButton }) => (
   <>
     <Title level={4}>
       You will be logged as a guest, without access to statistics and other
@@ -25,7 +25,7 @@ export const GuestForm = ({ handleLogin }) => (
         icon={<LoginOutlined />}
         type="primary"
         htmlType="submit"
-        onSubmit={handleLogin()}
+        onSubmit={handleSubmitButton()}
       >
         Continue as a guest
       </StyledButton>
@@ -34,5 +34,5 @@ export const GuestForm = ({ handleLogin }) => (
 )
 
 GuestForm.propTypes = {
-  handleLogin: PropTypes.func.isRequired,
+  handleSubmitButton: PropTypes.func.isRequired,
 }

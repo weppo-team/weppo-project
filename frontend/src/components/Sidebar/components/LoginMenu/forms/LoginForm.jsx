@@ -7,7 +7,7 @@ import { login } from '../../../../../services/auth/authServices'
 
 const { StyledForm, StyledButton } = FormElements
 
-export const LoginForm = ({ handleLogin }) => {
+export const LoginForm = ({ handleSubmitButton }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [buttonState, setButtonState] = useState(true)
@@ -15,9 +15,9 @@ export const LoginForm = ({ handleLogin }) => {
   const handleSubmit = (event) => {
     event.preventDefault()
     message.info('Attempting login...')
-    handleLogin()
     login(username, password).then(
       (response) => {
+        handleSubmitButton()
         message.success(response.data.message, 5)
       },
       (error) => {
@@ -86,5 +86,5 @@ export const LoginForm = ({ handleLogin }) => {
 }
 
 LoginForm.propTypes = {
-  handleLogin: PropTypes.func.isRequired,
+  handleSubmitButton: PropTypes.func.isRequired,
 }

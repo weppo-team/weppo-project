@@ -12,7 +12,7 @@ import { register } from '../../../../../services/auth/authServices'
 
 const { StyledForm, StyledButton } = FormElements
 
-export const RegisterForm = ({ handleLogin }) => {
+export const RegisterForm = ({ handleSubmitButton }) => {
   const usernameRegex = /^(?=.{6,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9]+(?<![_.])$/
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,32}$/
 
@@ -34,10 +34,10 @@ export const RegisterForm = ({ handleLogin }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    handleLogin()
     message.info('Attempting register...', 5)
     register(username, email, password).then(
       (response) => {
+        handleSubmitButton()
         message.success(response.data.message, 5)
       },
       (error) => {
@@ -116,5 +116,5 @@ export const RegisterForm = ({ handleLogin }) => {
 }
 
 RegisterForm.propTypes = {
-  handleLogin: PropTypes.func.isRequired,
+  handleSubmitButton: PropTypes.func.isRequired,
 }

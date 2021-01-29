@@ -4,7 +4,7 @@ import {
   UserOutlined,
   LogoutOutlined,
 } from '@ant-design/icons'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { LoginMenuElements } from './elements'
 import { LoginForm, RegisterForm, GuestForm } from './forms'
 import { LoginModal } from './components/LoginModal'
@@ -21,21 +21,21 @@ const items = [
     label: 'Login',
     icon: <LoginOutlined />,
     modalTitle: 'Login as user',
-    modalContent: (callback) => <LoginForm handleLogin={callback} />,
+    modalContent: (callback) => <LoginForm handleSubmitButton={callback} />,
   },
   {
     key: '2',
     label: 'Register',
     icon: <FormOutlined />,
     modalTitle: 'Register as user',
-    modalContent: (callback) => <RegisterForm handleLogin={callback} />,
+    modalContent: (callback) => <RegisterForm handleSubmitButton={callback} />,
   },
   {
     key: '3',
     label: 'Play as a guest',
     icon: <UserOutlined />,
     modalTitle: 'Log as a guest',
-    modalContent: (callback) => <GuestForm handleLogin={callback} />,
+    modalContent: (callback) => <GuestForm handleSubmitButton={callback} />,
   },
 ]
 
@@ -49,12 +49,13 @@ export const LoginMenu = () => {
     checkIfUserLoggedIn().then(
       (response) => {
         setIsLoggedIn(response.data.userLogged)
+        console.log(response.data)
       },
       () => setIsLoggedIn(false),
     )
   }
 
-  updateLoggedStatus()
+  useEffect(() => updateLoggedStatus(), [isModalVisible, isLoggedIn])
 
   const standardMenu = (
     <>
@@ -90,7 +91,10 @@ export const LoginMenu = () => {
       <StyledMenuButton
         shape="round"
         icon={<LogoutOutlined />}
-        onClick={logout}
+        onClick={() => {
+          logout()
+          setIsLoggedIn(false)
+        }}
       >
         {logoutLabel}
       </StyledMenuButton>
