@@ -1,5 +1,6 @@
 require('dotenv').config(); 
 const bcrypt = require('bcryptjs');
+const { Game } = require('../../database/gameModel.js');
 const { User } = require('../../database/userModel.js');
 const { createToken } = require('./authJWT')
 
@@ -7,7 +8,13 @@ const register = (req, res) => {
   const newUser = new User({
     username: req.body.username,
     email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8)
+    password: bcrypt.hashSync(req.body.password, 8),
+    ticTacToeScore: new Game({
+      eloScore: 0,
+      amountOfWonGames: 0,
+      amountOfLostGames: 0,
+      amountOfTiedGames: 0,
+    })
   });
 
   newUser.save((err, newUser) => {
@@ -113,7 +120,7 @@ const getLoginStatus = (req, res) => {
       userLogged: true,
       userType: req.usertype, 
     });
-  User.findById(req.userId)  
+  User.findById(req.id)  
     .exec((err, user) => {
       if (err) 
         return res.status(500).send({ message: 'Internal error, please try again later' });
