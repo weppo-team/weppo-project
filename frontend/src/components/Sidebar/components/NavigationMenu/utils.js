@@ -3,7 +3,9 @@ import {
   CalendarOutlined,
   UnorderedListOutlined,
 } from '@ant-design/icons'
+import { useEffect, useState } from 'react'
 import { useSelectedGame } from '../../../../context/SelectedGameContext'
+import { checkIfUserLoggedIn } from '../../../../services/auth/authServices'
 
 const items = [
   {
@@ -16,8 +18,17 @@ const items = [
   { key: '3', label: 'Rooms', path: '/game', icon: <UnorderedListOutlined /> },
 ]
 
-export const useFormatItems = () => {
+export const useFormatItems = (isLoggedIn) => {
   const [selectedGame] = useSelectedGame()
+  const [userType, setUserType] = useState(undefined)
+
+  useEffect(() => {
+    checkIfUserLoggedIn()
+      .then((response) => {
+        setUserType(response.data.userType)
+      })
+      .catch(() => setUserType(null))
+  }, [isLoggedIn])
 
   const getPath = ({ label, path }) =>
     label === 'Rooms' ? `${path}/${selectedGame}` : path
@@ -25,11 +36,13 @@ export const useFormatItems = () => {
   const isDisabled = ({ label }) => {
     switch (label) {
       case 'Statistics':
+        return userType !== 'user'
+
       case 'Games':
-        return false
+        return !userType
 
       case 'Rooms':
-        return selectedGame === null
+        return selectedGame === null || !userType
 
       default:
         throw new Error('Unknown label!')

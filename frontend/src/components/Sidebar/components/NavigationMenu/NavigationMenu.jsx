@@ -1,4 +1,5 @@
 import { Menu, Tooltip } from 'antd'
+import PropTypes from 'prop-types'
 import { useEffect, useState, useCallback } from 'react'
 import { useHistory, useLocation, Link } from 'react-router-dom'
 import { useTheme } from 'styled-components'
@@ -7,10 +8,10 @@ import { useFormatItems } from './utils'
 
 const { StyledMenu } = NavigationMenuElements
 
-export const NavigationMenu = () => {
+export const NavigationMenu = ({ isLoggedIn }) => {
   const history = useHistory()
   const location = useLocation()
-  const formatedItems = useFormatItems()
+  const formatedItems = useFormatItems(isLoggedIn)
 
   const findSelectedItem = useCallback(
     () =>
@@ -51,4 +52,8 @@ export const NavigationMenu = () => {
       ))}
     </StyledMenu>
   )
+}
+
+NavigationMenu.propTypes = {
+  isLoggedIn: PropTypes.bool.isRequired,
 }

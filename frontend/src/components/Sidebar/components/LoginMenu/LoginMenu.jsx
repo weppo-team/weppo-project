@@ -4,7 +4,9 @@ import {
   UserOutlined,
   LogoutOutlined,
 } from '@ant-design/icons'
+import PropTypes from 'prop-types'
 import { message } from 'antd'
+import { useHistory } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { LoginMenuElements } from './elements'
 import { LoginForm, RegisterForm, GuestForm } from './forms'
@@ -40,11 +42,11 @@ const items = [
   },
 ]
 
-export const LoginMenu = () => {
+export const LoginMenu = ({ isLoggedIn, setIsLoggedIn }) => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [modalTitle, setModalTitle] = useState(null)
   const [modalContent, setModalContent] = useState(null)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const history = useHistory()
 
   const updateLoggedStatus = () => {
     checkIfUserLoggedIn().then(
@@ -96,6 +98,7 @@ export const LoginMenu = () => {
             (response) => {
               setIsLoggedIn(false)
               message.info(response.data.message)
+              history.push('/')
             },
             () => message.error('Error during logout, please try again'),
           )
@@ -107,4 +110,9 @@ export const LoginMenu = () => {
   )
 
   return isLoggedIn ? logoutMenu : standardMenu
+}
+
+LoginMenu.propTypes = {
+  isLoggedIn: PropTypes.bool.isRequired,
+  setIsLoggedIn: PropTypes.func.isRequired,
 }

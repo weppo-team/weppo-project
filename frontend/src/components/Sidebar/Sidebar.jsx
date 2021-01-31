@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { NavigationMenu } from './components/NavigationMenu'
 import { LoginMenu } from './components/LoginMenu'
@@ -8,6 +9,7 @@ const { LogoWrapper, StyledSider, StyledDivider, StyledTitle } = SidebarElements
 
 export const Sidebar = () => {
   const { title } = useAppInfo()
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   return (
     <StyledSider breakpoint="lg" collapsedWidth="0">
@@ -17,8 +19,8 @@ export const Sidebar = () => {
         </StyledTitle>
         <StyledDivider />
       </LogoWrapper>
-      <NavigationMenu />
-      <LoginMenu />
+      <NavigationMenu isLoggedIn={isLoggedIn} />
+      <LoginMenu isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
     </StyledSider>
   )
 }
