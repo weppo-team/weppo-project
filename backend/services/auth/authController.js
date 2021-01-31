@@ -61,7 +61,7 @@ const login = (req, res) => {
       }
 
       const token = createToken(user.id, user.username, 'user') 
-      res.cookie('auth-token', token, { httpOnly: true, secure: true })
+      res.cookie('auth-token', token, { httpOnly: true })
       res.status(200).send({
         id: user._id,
         username: user.username,
@@ -75,7 +75,7 @@ const login = (req, res) => {
 const guest = (req, res) => {
 
     const token = createToken(-1, req.username, 'guest') 
-    res.cookie('auth-token', token, { httpOnly: true, secure: true })
+    res.cookie('auth-token', token, { httpOnly: true })
     res.status(200).send({
       id: 0,
       username: req.username,
@@ -86,7 +86,7 @@ const guest = (req, res) => {
 
 
 const logout = (req, res) => {
-  res.clearCookie('auth-token', { httpOnly: true, secure: true }); 
+  res.clearCookie('auth-token', { httpOnly: true }); 
   res.status(200).send({
     message: 'Logout successful'
   });
