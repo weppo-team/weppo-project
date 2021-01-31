@@ -8,4 +8,4 @@ const gameSchema = new Schema({
   amountOfTiedGames: Number,
 });
 
-module.exports = gameSchema;
+module.exports = { gameSchema };

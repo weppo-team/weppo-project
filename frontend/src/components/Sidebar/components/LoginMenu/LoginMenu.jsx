@@ -1,8 +1,18 @@
-import { LoginOutlined, FormOutlined, UserOutlined } from '@ant-design/icons'
-import { useState } from 'react'
+import {
+  LoginOutlined,
+  FormOutlined,
+  UserOutlined,
+  LogoutOutlined,
+} from '@ant-design/icons'
+import { message } from 'antd'
+import { useState, useEffect } from 'react'
 import { LoginMenuElements } from './elements'
 import { LoginForm, RegisterForm, GuestForm } from './forms'
 import { LoginModal } from './components/LoginModal'
+import {
+  checkIfUserLoggedIn,
+  logout,
+} from '../../../../services/auth/authServices'
 
 const { StyledDiv, StyledMenuButton } = LoginMenuElements
 
@@ -12,21 +22,21 @@ const items = [
     label: 'Login',
     icon: <LoginOutlined />,
     modalTitle: 'Login as user',
-    modalContent: <LoginForm />,
+    modalContent: (callback) => <LoginForm handleSubmitButton={callback} />,
   },
   {
     key: '2',
     label: 'Register',
     icon: <FormOutlined />,
     modalTitle: 'Register as user',
-    modalContent: <RegisterForm />,
+    modalContent: (callback) => <RegisterForm handleSubmitButton={callback} />,
   },
   {
     key: '3',
     label: 'Play as a guest',
     icon: <UserOutlined />,
     modalTitle: 'Log as a guest',
-    modalContent: <GuestForm />,
+    modalContent: (callback) => <GuestForm handleSubmitButton={callback} />,
   },
 ]
 
@@ -34,8 +44,20 @@ export const LoginMenu = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [modalTitle, setModalTitle] = useState(null)
   const [modalContent, setModalContent] = useState(null)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
-  return (
+  const updateLoggedStatus = () => {
+    checkIfUserLoggedIn().then(
+      (response) => {
+        setIsLoggedIn(response.data.userLogged)
+      },
+      () => setIsLoggedIn(false),
+    )
+  }
+
+  useEffect(() => updateLoggedStatus(), [isModalVisible, isLoggedIn])
+
+  const standardMenu = (
     <>
       <StyledDiv>
         {items.map((item) => (
@@ -45,7 +67,8 @@ export const LoginMenu = () => {
             icon={item.icon}
             onClick={() => {
               setModalTitle(item.modalTitle)
-              setModalContent(item.modalContent)
+              // eslint-disable-next-line no-unused-vars
+              setModalContent((_) => item.modalContent)
               setIsModalVisible(true)
             }}
           >
@@ -61,4 +84,27 @@ export const LoginMenu = () => {
       />
     </>
   )
+
+  const logoutLabel = 'Logout'
+  const logoutMenu = (
+    <StyledDiv>
+      <StyledMenuButton
+        shape="round"
+        icon={<LogoutOutlined />}
+        onClick={() => {
+          logout().then(
+            (response) => {
+              setIsLoggedIn(false)
+              message.info(response.data.message)
+            },
+            () => message.error('Error during logout, please try again'),
+          )
+        }}
+      >
+        {logoutLabel}
+      </StyledMenuButton>
+    </StyledDiv>
+  )
+
+  return isLoggedIn ? logoutMenu : standardMenu
 }

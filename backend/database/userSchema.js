@@ -1,8 +1,13 @@
 const mongoose = require('mongoose');
-const { gameSchema } = require('./gameSchema');
 const { Schema } = mongoose;
+const { gameSchema } = require('./gameSchema');
 
 const userSchema = new Schema({
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   email: {
     type: String,
     required: true,
@@ -11,7 +16,7 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: true,
-    unique: true,
+    unique: false,
   },
 
   googleAuthID: String,
@@ -23,4 +28,4 @@ const userSchema = new Schema({
   ticTacToeScore: gameSchema,
 });
 
-module.exports = userSchema;
+module.exports = { userSchema };
