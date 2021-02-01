@@ -14,7 +14,7 @@ const getStats = (req, res) => {
   switch(req.body.gameName){
     case 'tictactoe':
       User.findOne({
-        id: req.body.id
+        username: req.username
       }, 
       (err, user) => {
         if(err)

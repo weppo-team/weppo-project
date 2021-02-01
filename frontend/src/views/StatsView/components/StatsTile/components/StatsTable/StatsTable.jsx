@@ -4,7 +4,7 @@ import { Table } from 'antd'
 export const StatsTable = ({ elo, won, tied, lost }) => {
   const columns = [
     {
-      title: 'Parameter',
+      title: 'Statistics',
       dataIndex: 'label',
       key: 'label',
       width: 300,

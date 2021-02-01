@@ -10,7 +10,7 @@ const register = (req, res) => {
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),
     ticTacToeScore: new Game({
-      eloScore: 0,
+      eloScore: 1200,
       amountOfWonGames: 0,
       amountOfLostGames: 0,
       amountOfTiedGames: 0,
