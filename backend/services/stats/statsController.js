@@ -1,12 +1,11 @@
 const { User } = require('../../database/userModel.js');
-const { Game } = require('../../database/gameModel.js');
 
-const sendStats = (stats, res) => {
+const sendStats = (score, res) => {
   res.status(200).send({
-    eloScore: stats.eloScore,
-    amountOfWonGames: stats.amountOfWonGames,
-    amountOfLostGames: stats.amountOfLostGames,
-    amountOfTiedGames: stats.amountOfTiedGames
+    eloScore: score.eloScore,
+    amountOfWonGames: score.amountOfWonGames,
+    amountOfLostGames: score.amountOfLostGames,
+    amountOfTiedGames: score.amountOfTiedGames
   });
 }
 

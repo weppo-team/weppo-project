@@ -19,7 +19,6 @@ export const StatsTile = ({ disabled, icon, title, name }) => {
     if (!disabled)
       stats(name)
         .then((response) => {
-          console.log(response.data)
           setElo(response.data.eloScore)
           setWon(response.data.amountOfWonGames)
           setTied(response.data.amountOfTiedGames)

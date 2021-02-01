@@ -1,23 +1,17 @@
 import PropTypes from 'prop-types'
-import {
-  XYPlot,
-  VerticalBarSeries,
-  XAxis,
-  YAxis,
-  HorizontalGridLines,
-} from 'react-vis'
+import { XYPlot, VerticalBarSeries, XAxis, YAxis } from 'react-vis'
+import { theme } from '../../../../../../style/theme'
 
 export const StatsChart = ({ won, tied, lost }) => {
   const data = [
-    { x: 'Wins', y: won, color: 'green' },
-    { x: 'Ties', y: tied, color: 'blue' },
-    { x: 'Lost', y: lost, color: 'red' },
+    { x: 'Wins', y: won, color: theme.color.lightgreen },
+    { x: 'Ties', y: tied, color: theme.color.blue },
+    { x: 'Lost', y: lost, color: theme.color.indianred },
   ]
 
   return (
     <XYPlot height={300} width={600} xType="ordinal">
       <VerticalBarSeries colorType="literal" data={data} />
-      <HorizontalGridLines />
       <XAxis />
       <YAxis />
     </XYPlot>
