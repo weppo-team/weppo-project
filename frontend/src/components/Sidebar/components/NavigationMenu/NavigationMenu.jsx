@@ -15,8 +15,9 @@ export const NavigationMenu = ({ isLoggedIn }) => {
 
   const findSelectedItem = useCallback(
     () =>
-      formatedItems.find((_item) => location.pathname.startsWith(_item.path))
-        ?.key,
+      formatedItems.find((_item) =>
+        location.pathname.startsWith(`/${_item.path.split('/')[1]}`),
+      )?.key,
     [location],
   )
 
