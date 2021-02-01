@@ -1,6 +1,7 @@
 import axios from 'axios'
+import { useState, useEffect } from 'react'
 
-const axiosForCookies = axios.create({
+export const axiosForCookies = axios.create({
   withCredentials: true,
 })
 
@@ -27,3 +28,24 @@ export const logout = () => axiosForCookies.post('/api/logout')
 export const getUserData = () => axiosForCookies.post('/api/user')
 
 export const checkIfUserLoggedIn = () => axiosForCookies.post('/api/status')
+
+export const useUserData = () => {
+  const [loading, setLoading] = useState(true)
+  const [userData, setUserData] = useState(null)
+
+  useEffect(() => {
+    getUserData()
+      .then((response) => {
+        setUserData(response.data)
+        setLoading(false)
+      })
+      .catch(() => {
+        setLoading(false)
+      })
+  }, [])
+
+  return {
+    loading,
+    userData,
+  }
+}

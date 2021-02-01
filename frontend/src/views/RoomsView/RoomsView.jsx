@@ -5,8 +5,15 @@ import { Button } from 'antd'
 import { ContentHeadingSection } from '../../components/ContentHeadingSection'
 import { useSelectedGameObject } from '../../lib/utlis'
 import { RoomsViewElements } from './elements'
-import { useCheckForGameExistence, useCheckForGameAvailability } from './utils'
+import {
+  useCheckForGameExistence,
+  useCheckForGameAvailability,
+  useGetRooms,
+} from './utils'
 import { LockView } from '../../components/LockView'
+import { LoadingSpinnerForViews } from '../../components/LoadingSpinnerForViews'
+import { Rooms } from './components/Rooms'
+import { useUserData } from '../../services/auth/authServices'
 
 const {
   HeadingWrapper,
@@ -20,15 +27,19 @@ export const RoomsView = () => {
   const gameExists = useCheckForGameExistence()
   const isGameAvailable = useCheckForGameAvailability()
   const selectedGame = useSelectedGameObject()
+  const { rooms, loading: roomsLoading } = useGetRooms()
+  const { userData, loading: userDataLoading } = useUserData()
 
   if (!gameExists || !isGameAvailable) {
     history.push('/')
   }
 
+  if (roomsLoading || userDataLoading) {
+    return <LoadingSpinnerForViews />
+  }
+
   const handleCreateNewRoom = () => {
-    // TODO:IMPLEMENT
-    console.log('Create new room')
-    return null
+    history.push(`/game/${selectedGame.name}/${userData.username}`)
   }
 
   return (
@@ -43,19 +54,23 @@ export const RoomsView = () => {
         </Button>
       </HeadingWrapper>
       <ContentWrapper>
-        <LockView
-          icon={InfoCircleTwoTone}
-          mainText="There is nothing here"
-          secondaryText={
-            <>
-              Don&apos;t be shy.{' '}
-              <ClickableText onClick={handleCreateNewRoom}>
-                Create
-              </ClickableText>{' '}
-              your own room!
-            </>
-          }
-        />
+        {rooms.length === 0 ? (
+          <LockView
+            icon={InfoCircleTwoTone}
+            mainText="There is nothing here"
+            secondaryText={
+              <>
+                Don&apos;t be shy.{' '}
+                <ClickableText onClick={handleCreateNewRoom}>
+                  Create
+                </ClickableText>{' '}
+                your own room!
+              </>
+            }
+          />
+        ) : (
+          <Rooms rooms={rooms} />
+        )}
       </ContentWrapper>
     </Container>
   )
