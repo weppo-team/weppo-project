@@ -1,28 +1,22 @@
-import { Menu } from 'antd'
+import { Menu, Tooltip } from 'antd'
+import PropTypes from 'prop-types'
 import { useEffect, useState, useCallback } from 'react'
 import { useHistory, useLocation, Link } from 'react-router-dom'
-import { InfoCircleOutlined, CalendarOutlined } from '@ant-design/icons'
 import { useTheme } from 'styled-components'
 import { NavigationMenuElements } from './elements'
+import { useFormatItems } from './utils'
 
 const { StyledMenu } = NavigationMenuElements
 
-const items = [
-  {
-    key: '1',
-    label: 'Statistics',
-    path: '/stats',
-    icon: <InfoCircleOutlined />,
-  },
-  { key: '2', label: 'Games', path: '/games', icon: <CalendarOutlined /> },
-]
-
-export const NavigationMenu = () => {
+export const NavigationMenu = ({ isLoggedIn }) => {
   const history = useHistory()
   const location = useLocation()
+  const formatedItems = useFormatItems(isLoggedIn)
 
   const findSelectedItem = useCallback(
-    () => items.find((_item) => location.pathname.startsWith(_item.path))?.key,
+    () =>
+      formatedItems.find((_item) => location.pathname.startsWith(_item.path))
+        ?.key,
     [location],
   )
 
@@ -34,7 +28,7 @@ export const NavigationMenu = () => {
   }, [findSelectedItem, setSelectedKey])
 
   const onClickMenu = (item) => {
-    const clicked = items.find((_item) => _item.key === item.key)
+    const clicked = formatedItems.find((_item) => _item.key === item.key)
 
     if (clicked) {
       history.push(clicked.path)
@@ -49,11 +43,17 @@ export const NavigationMenu = () => {
       customTheme={theme}
       onClickMenu={onClickMenu}
     >
-      {items.map((item) => (
-        <Menu.Item key={item.key} icon={item.icon}>
-          <Link to={item.path}>{item.label}</Link>
+      {formatedItems.map((item) => (
+        <Menu.Item key={item.key} icon={item.icon} disabled={item.disabled}>
+          <Tooltip placement="right" title={item.tooltipContent}>
+            <Link to={item.path}>{item.label}</Link>
+          </Tooltip>
         </Menu.Item>
       ))}
     </StyledMenu>
   )
+}
+
+NavigationMenu.propTypes = {
+  isLoggedIn: PropTypes.bool.isRequired,
 }

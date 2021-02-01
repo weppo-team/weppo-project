@@ -22,6 +22,7 @@ export const GamesView = () => {
             icon={game.icon}
             route={game.route}
             title={game.title}
+            name={game.name}
           />
         ))}
       </Container>

@@ -1,7 +1,17 @@
 import styled, { css } from 'styled-components'
-import { Layout } from 'antd'
+import { Layout, Typography } from 'antd'
 
 const { Sider } = Layout
+const { Title } = Typography
+
+const StyledTitle = styled(Title)(
+  ({ theme }) => css`
+    a,
+    a:visited {
+      color: ${theme.color.white};
+    }
+  `,
+)
 
 const LogoWrapper = styled.div(
   ({ theme }) => css`
@@ -38,4 +48,5 @@ export const SidebarElements = {
   LogoWrapper,
   StyledSider,
   StyledDivider,
+  StyledTitle,
 }
