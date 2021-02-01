@@ -4,4 +4,7 @@ const axiosForCookies = axios.create({
   withCredentials: true,
 })
 
-export const stats = (name) => axiosForCookies.post(`/api/stats/${name}`)
+export const stats = (gameName) =>
+  axiosForCookies.post(`/api/stats`, {
+    gameName,
+  })

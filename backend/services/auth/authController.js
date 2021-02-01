@@ -73,7 +73,6 @@ const login = (req, res) => {
 };
 
 const guest = (req, res) => {
-
     const token = createToken(-1, req.username, 'guest') 
     res.cookie('auth-token', token, { httpOnly: true })
     res.status(200).send({

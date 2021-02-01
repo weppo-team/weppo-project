@@ -12,12 +12,13 @@ export const StatsTable = ({ name }) => {
   useEffect(() => {
     stats(name)
       .then((response) => {
-        setElo(response.eloScore)
-        setWon(response.amountOfWonGames)
-        setTied(response.amountOfTiedGames)
-        setLost(response.amountOfLostGames)
+        console.log(response.data)
+        setElo(response.data.eloScore)
+        setWon(response.data.amountOfWonGames)
+        setTied(response.data.amountOfTiedGames)
+        setLost(response.data.amountOfLostGames)
       })
-      .catch(() => message.error('Internal server error, plase try again'))
+      .catch((error) => message.error(error.data.message))
   }, [])
 
   console.log(name)

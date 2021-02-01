@@ -21,6 +21,7 @@ export const StatsView = () => {
             disabled={game.disabled}
             icon={game.icon}
             title={game.title}
+            name={game.name}
           />
         ))}
       </Container>
