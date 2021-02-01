@@ -1,16 +1,45 @@
 import PropTypes from 'prop-types'
-import { Card, Avatar, Tooltip } from 'antd'
-import { StatsTable } from './components/StatsTable'
+import { useState, useEffect } from 'react'
+import { message, Card, Avatar, Tooltip } from 'antd'
 import { StatsTileElements } from './elements'
+import { stats } from '../../../../services/stats/statsServices'
+import { StatsTable } from './components/StatsTable/StatsTable'
+import { StatsChart } from './components/StatsChart'
 
 const { Meta } = Card
-const { StyledCard } = StatsTileElements
+const { Container, StyledCard } = StatsTileElements
 
 export const StatsTile = ({ disabled, icon, title, name }) => {
-  let statsTable = <StatsTable name={name} />
+  const [elo, setElo] = useState(0)
+  const [won, setWon] = useState(0)
+  const [tied, setTied] = useState(0)
+  const [lost, setLost] = useState(0)
+
+  useEffect(() => {
+    if (!disabled)
+      stats(name)
+        .then((response) => {
+          console.log(response.data)
+          setElo(response.data.eloScore)
+          setWon(response.data.amountOfWonGames)
+          setTied(response.data.amountOfTiedGames)
+          setLost(response.data.amountOfLostGames)
+        })
+        .catch((error) => message.error(error.response.data.message))
+  }, [])
+
+  let statsContent
   if (disabled)
-    statsTable =
+    statsContent =
       'Statistics for this game will be made available along with the game.'
+  else
+    statsContent = (
+      <Container>
+        <StatsTable name={name} elo={elo} won={won} tied={tied} lost={lost} />
+        <StatsChart name={name} won={won} tied={tied} lost={lost} />
+      </Container>
+    )
+
   return (
     <Tooltip
       title={
@@ -22,7 +51,7 @@ export const StatsTile = ({ disabled, icon, title, name }) => {
         hoverable={false}
         title={<Meta avatar={<Avatar src={icon} />} title={title} />}
       >
-        {statsTable}
+        {statsContent}
       </StyledCard>
     </Tooltip>
   )

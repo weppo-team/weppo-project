@@ -1,44 +1,26 @@
 import PropTypes from 'prop-types'
-import { message, Table } from 'antd'
-import { useEffect, useState } from 'react'
-import { stats } from '../../../../../../services/stats/statsServices'
+import { Table } from 'antd'
 
-export const StatsTable = ({ name }) => {
-  const [elo, setElo] = useState(0)
-  const [won, setWon] = useState(0)
-  const [tied, setTied] = useState(0)
-  const [lost, setLost] = useState(0)
-
-  useEffect(() => {
-    stats(name)
-      .then((response) => {
-        console.log(response.data)
-        setElo(response.data.eloScore)
-        setWon(response.data.amountOfWonGames)
-        setTied(response.data.amountOfTiedGames)
-        setLost(response.data.amountOfLostGames)
-      })
-      .catch((error) => message.error(error.data.message))
-  }, [])
-
-  console.log(name)
+export const StatsTable = ({ elo, won, tied, lost }) => {
   const columns = [
     {
       title: 'Parameter',
       dataIndex: 'label',
       key: 'label',
+      width: 300,
     },
     {
       title: 'Value',
       dataIndex: 'value',
       key: 'value',
+      width: 300,
     },
   ]
 
   const data = [
     {
       key: '1',
-      label: 'Rating',
+      label: 'Rating ELO',
       value: elo,
     },
     {
@@ -62,5 +44,8 @@ export const StatsTable = ({ name }) => {
 }
 
 StatsTable.propTypes = {
-  name: PropTypes.string.isRequired,
+  elo: PropTypes.number.isRequired,
+  won: PropTypes.number.isRequired,
+  tied: PropTypes.number.isRequired,
+  lost: PropTypes.number.isRequired,
 }
