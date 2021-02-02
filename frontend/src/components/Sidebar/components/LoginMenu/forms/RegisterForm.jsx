@@ -15,22 +15,12 @@ const { StyledForm, StyledButton } = FormElements
 export const RegisterForm = ({ handleSubmitButton }) => {
   const usernameRegex = /^(?=.{6,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9]+(?<![_.])$/
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,32}$/
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
   const [buttonState, setButtonState] = useState(true)
-
-  const checkButton = () => {
-    let valid = false
-    if (
-      usernameRegex.test(username) &&
-      passwordRegex.test(password) &&
-      email != null
-    )
-      valid = true
-    setButtonState(!valid)
-  }
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -50,6 +40,14 @@ export const RegisterForm = ({ handleSubmitButton }) => {
         message.error(errorMessage, 5)
       },
     )
+  }
+
+  const checkButton = () => {
+    const valid =
+      usernameRegex.test(username) &&
+      passwordRegex.test(password) &&
+      emailRegex.test(email)
+    setButtonState(!valid)
   }
 
   return (

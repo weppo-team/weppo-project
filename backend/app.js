@@ -17,6 +17,7 @@ app.use(cors({
   credentials: true,
 }));
 require('./services/auth/authRoutes')(app);
+require('./services/stats/statsRoutes')(app);
 
 const FRONTEND_BUILD_PATH = `${__dirname}/../frontend/build`;
 
