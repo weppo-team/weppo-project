@@ -9,8 +9,11 @@ export const StatsChart = ({ won, tied, lost }) => {
     { x: 'Lost', y: lost, color: theme.color.indianred },
   ]
 
+  const biggestValue = Math.max(won, tied, lost)
+  const upperYRange = biggestValue > 0 ? Math.ceil(biggestValue / 10) * 10 : 10
+
   return (
-    <XYPlot height={300} width={600} xType="ordinal">
+    <XYPlot height={300} width={600} xType="ordinal" yDomain={[0, upperYRange]}>
       <VerticalBarSeries colorType="literal" data={data} />
       <XAxis />
       <YAxis />
