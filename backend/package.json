@@ -15,9 +15,15 @@
     "test:watch": "yarn test --watchAll"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
     "compression": "^1.7.4",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
-    "mongoose": "^5.11.11"
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.11.11",
+    "socket.io": "^3.1.0"
   },
   "devDependencies": {
     "dotenv": "^8.2.0",

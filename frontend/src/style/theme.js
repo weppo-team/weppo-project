@@ -13,5 +13,9 @@ export const theme = {
   },
   color: {
     white: '#ffffff',
+    blue: '#1890ff',
+    lightgreen: '#90ee90',
+    indianred: '#cd5c5c',
+    lightGray: '#dcdcdc',
   },
 }

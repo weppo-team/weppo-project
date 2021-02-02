@@ -14,7 +14,6 @@ export const LoginModal = ({
   }
 
   const styledTitle = <Title level={2}>{modalTitle}</Title>
-
   return (
     <Modal
       visible={isModalVisible}
@@ -22,14 +21,14 @@ export const LoginModal = ({
       onCancel={handleCancel}
       footer={null}
     >
-      {modalContent}
+      {modalContent ? modalContent(handleCancel) : null}
     </Modal>
   )
 }
 
 LoginModal.propTypes = {
   modalTitle: PropTypes.string.isRequired,
-  modalContent: PropTypes.string.isRequired,
+  modalContent: PropTypes.func.isRequired,
   isModalVisible: PropTypes.bool.isRequired,
   onModalVisible: PropTypes.func.isRequired,
 }

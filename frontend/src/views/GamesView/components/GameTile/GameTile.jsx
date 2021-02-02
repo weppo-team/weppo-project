@@ -2,14 +2,21 @@ import PropTypes from 'prop-types'
 import { Card, Avatar, Tooltip } from 'antd'
 import { useHistory } from 'react-router-dom'
 import { GameTileElements } from './elements'
+import { useSelectedGame } from '../../../../context/SelectedGameContext'
 
 const { Meta } = Card
 const { StyledCard } = GameTileElements
 
-export const GameTile = ({ disabled, icon, title, route }) => {
+export const GameTile = ({ disabled, icon, title, route, name }) => {
   const history = useHistory()
+  const [, setSelectedGame] = useSelectedGame()
 
-  const handleOnClick = () => !disabled && history.push(route)
+  const handleOnClick = () => {
+    if (!disabled) {
+      setSelectedGame(name)
+      history.push(route)
+    }
+  }
 
   return (
     <Tooltip title={disabled && 'The game is currently unavailable'}>
@@ -31,4 +38,5 @@ GameTile.propTypes = {
   icon: PropTypes.any.isRequired,
   route: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
 }
