@@ -15,6 +15,10 @@ module.exports = function (app, io) {
     socket.on('joinRoom', room => {
       socket.join(room);
     });
+
+    socket.on('madeMove', moveData => {
+      console.log(moveData)
+    })
   });
 
   app.use((req, res, next) => {
