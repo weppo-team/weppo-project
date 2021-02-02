@@ -4,6 +4,7 @@ import { WelcomeView } from '../views/WelcomeView'
 import { GamesView } from '../views/GamesView'
 import { StatsView } from '../views/StatsView'
 import { RoomsView } from '../views/RoomsView'
+import { SingleGameView } from '../views/SingleGameView'
 import { ProtectedRoute } from './ProtectedRoute'
 
 export const Routing = () => (
@@ -29,6 +30,12 @@ export const Routing = () => (
         protectionLevel="guest"
         exact
         path="/game/:gameName"
+      />
+      <ProtectedRoute
+        component={SingleGameView}
+        protectionLevel="guest"
+        exact
+        path="/game/:gameName/:roomName"
       />
       <Route>
         <Redirect to="/" />
