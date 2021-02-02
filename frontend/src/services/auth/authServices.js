@@ -29,12 +29,14 @@ export const getUserData = () => axiosForCookies.post('/api/user')
 
 export const checkIfUserLoggedIn = () => axiosForCookies.post('/api/status')
 
+export const getLoggedPersonData = () => axiosForCookies.get('/api/loggedData')
+
 export const useUserData = () => {
   const [loading, setLoading] = useState(true)
   const [userData, setUserData] = useState(null)
 
   useEffect(() => {
-    getUserData()
+    getLoggedPersonData()
       .then((response) => {
         setUserData(response.data)
         setLoading(false)

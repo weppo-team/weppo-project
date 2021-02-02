@@ -1,5 +1,7 @@
 const { verifyToken } = require('../../services/auth/authJWT');
 
+const ROOM_SIZE_LIMIT = 2;
+
 module.exports = function (app, io) {
   const tictactoeRooms = io.of('/api/sockets/tictactoe');
 
@@ -11,7 +13,6 @@ module.exports = function (app, io) {
     });
 
     socket.on('joinRoom', room => {
-      console.log(room);
       socket.join(room);
     });
   });
@@ -26,12 +27,17 @@ module.exports = function (app, io) {
       // note that every user is also connected to the room with just him
       const roomElements = Array.from(tictactoeRooms.adapter.rooms.get(curr));
 
-      return !(roomElements.length === 1 && roomElements[0] === curr);
+      // returning rooms that are not full
+      return (
+        !(roomElements.length === 1 && roomElements[0] === curr) &&
+        roomElements.length < ROOM_SIZE_LIMIT
+      );
     });
 
     const rooms = roomsNames.map(curr => ({
       name: curr,
       connectedSockets: Array.from(tictactoeRooms.adapter.rooms.get(curr)),
+      roomSizeLimit: ROOM_SIZE_LIMIT,
     }));
 
     res.send({ rooms });

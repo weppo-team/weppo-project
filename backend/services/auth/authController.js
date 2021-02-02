@@ -70,11 +70,11 @@ const login = (req, res) => {
 };
 
 const guest = (req, res) => {
-  const token = createToken(-1, req.username, 'guest');
+  const token = createToken(-1, req.body.username, 'guest');
   res.cookie('auth-token', token, { httpOnly: true });
   res.status(200).send({
     id: 0,
-    username: req.username,
+    username: req.body.username,
     succesful: true,
     message: 'Login as guest successful',
   });
@@ -130,6 +130,14 @@ const getLoginStatus = (req, res) => {
   });
 };
 
+const getLoggedPersonData = (req, res) => {
+  res.send({
+    id: req.id,
+    username: req.username,
+    usertype: req.usertype,
+  });
+};
+
 module.exports = {
   register,
   login,
@@ -137,4 +145,5 @@ module.exports = {
   logout,
   getUserData,
   getLoginStatus,
+  getLoggedPersonData,
 };

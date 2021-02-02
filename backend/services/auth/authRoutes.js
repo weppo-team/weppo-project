@@ -9,6 +9,7 @@ const {
   logout,
   getUserData,
   getLoginStatus,
+  getLoggedPersonData,
 } = require('./authController');
 const { verifyToken } = require('./authJWT');
 
@@ -33,4 +34,6 @@ module.exports = function (app) {
   app.post('/api/user', [verifyToken], getUserData);
 
   app.post('/api/status', [verifyToken], getLoginStatus);
+
+  app.get('/api/loggedData', [verifyToken], getLoggedPersonData);
 };
