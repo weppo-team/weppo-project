@@ -24,12 +24,13 @@ module.exports = function (app, io) {
       boardState.push(' ')
     }  
 
-    let xTaken = false
     socket.on('getSymbol', () => {
       socket.emit('takeSymbol', {
-        playerSymbol: xTaken ? 'O' :' X'
+        playerSymbol: 'X'
       })
-      xTaken = !xTaken
+      socket.broadcast.emit('takeSymbol', {
+        playerSymbol: 'O'
+      });
     }
     )
 

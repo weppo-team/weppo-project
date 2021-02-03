@@ -12,17 +12,9 @@ export const SingleGameView = () => {
   )
 
   useEffect(() => {
-    initSocket()
-
+    initSocket((argSocket) => argSocket.emit('joinRoom', roomName))
     return () => disconnectSocket()
-  }, [])
-
-  useEffect(() => {
-    if (socket) {
-      socket.emit('joinRoom', roomName)
-    }
-    return <LoadingSpinnerForViews />
-  }, [socket])
+  }, [socket, initSocket, disconnectSocket])
 
   if (socket) {
     return (
