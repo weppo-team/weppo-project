@@ -12,12 +12,39 @@ module.exports = function (app, io) {
       console.log(`disconnected: ${socket.id}`);
     });
 
+    let roomName
+
     socket.on('joinRoom', room => {
       socket.join(room);
+      roomName = room;
     });
 
+    const boardState = []
+    for (let i = 0; i < 9; i += 1) {
+      boardState.push(' ')
+    }  
+
+    let xTaken = false
+    socket.on('getSymbol', () => {
+      socket.emit('takeSymbol', {
+        playerSymbol: xTaken ? 'O' :' X'
+      })
+      xTaken = !xTaken
+    }
+    )
+
     socket.on('madeMove', moveData => {
-      console.log(moveData)
+      console.log(`Move on server: ${moveData.username}`)
+      boardState[moveData.tile] = moveData.playerSymbol
+      console.log(`BoardState on server: ${boardState}`)
+      socket.emit('madeMove', {
+        turn: moveData.playerSymbol == 'X' ? 'O' : 'X', 
+        boardState
+      });
+      socket.broadcast.emit('madeMove', {
+        turn: moveData.playerSymbol == 'X' ? 'O' : 'X', 
+        boardState
+      });
     })
   });
 
