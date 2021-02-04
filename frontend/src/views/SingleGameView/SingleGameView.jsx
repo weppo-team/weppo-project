@@ -1,5 +1,5 @@
-import { useParams } from 'react-router-dom'
 import { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import { ContentHeadingSection } from '../../components/ContentHeadingSection'
 import { useGetSocket } from '../../lib/utlis'
 import { GameController } from './components/GameController'

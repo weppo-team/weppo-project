@@ -1,109 +1,155 @@
 import PropTypes from 'prop-types'
-import { Card, Avatar } from 'antd'
+import { useState } from 'react'
+import { Card, Avatar, message } from 'antd'
 import ticTacToeLogo from '../../../../../../logos/tic-tac-toe.svg'
 import { TicTacToeBoardElements } from './elements'
 import { PlayersLabel } from './components/PlayersLabel'
 import { TurnLabel } from './components/TurnLabel'
 import { Square } from './components/Square'
-import { LoadingSpinnerForViews } from '../../../../../../components/LoadingSpinnerForViews'
 
 const { Meta } = Card
 const { Container, StyledCard, Grid } = TicTacToeBoardElements
 
-export const TicTacToeBoard = ({ socket }) => {
-  let playerSymbol
-
-  const boardState = []
-  for (let i = 0; i < 9; i += 1) {
-    boardState.push(' ')
-  }
+export const TicTacToeBoard = ({ socket, userData }) => {
+  const [roomName, setRoomName] = useState(null)
+  const [playerSymbol, setPlayerSymbol] = useState(' ')
+  const playerName =
+    userData.usertype === 'guest'
+      ? `${userData.username} (guest)`
+      : userData.username
+  const [opponentName, setOpponentName] = useState('[waiting for opponent]')
+  const [opponentType, setOpponentType] = useState('N/A')
+  const [canMove, setCanMove] = useState('false')
+  const [board, setBoardState] = useState([
+    ' ',
+    ' ',
+    ' ',
+    ' ',
+    ' ',
+    ' ',
+    ' ',
+    ' ',
+    ' ',
+  ])
 
   const setBoardTile = (i) => {
-    if (boardState[i] === ' ') {
-      boardState[i] = playerSymbol
-      socket.emit('madeMove', {
-        username: 'N/A',
+    console.log(`${canMove} - ${roomName}`)
+    if (canMove) {
+      socket.emit('makeMove', {
         playerSymbol,
         tile: i,
+        board,
+        roomName,
       })
     }
-    console.log(boardState)
   }
 
-  socket.emit('getSymbol')
+  socket.on('giveUserdata', (data) => {
+    setRoomName(data.roomName)
+    socket.emit('giveUserdata', {
+      roomName: data.roomName,
+      username: userData.username,
+      usertype: userData.usertype,
+    })
+  })
+
+  socket.on('takeUserdata', (data) => {
+    if (data.username !== userData.username) {
+      setOpponentType(data.usertype)
+      setOpponentName(
+        opponentType === 'guest' ? `${data.username} (guest)` : data.username,
+      )
+    }
+  })
 
   socket.on('takeSymbol', (data) => {
     console.log(`Got symbol: ${data.playerSymbol}`)
-    playerSymbol = data.playerSymbol
+    setPlayerSymbol(data.playerSymbol)
+    if (playerSymbol === 'X') setCanMove(true)
   })
 
   socket.on('madeMove', (data) => {
-    console.log(`${socket.id}: ${data.boardState}`)
+    setBoardState(data.newBoard)
+    console.log(board)
+    setCanMove(data.moveSymbol !== playerSymbol)
+    console.log(canMove)
   })
 
-  if (playerSymbol)
-    return (
-      <Container>
-        <StyledCard
-          title={
-            <Meta avatar={<Avatar src={ticTacToeLogo} />} title="Tic-Tac-Toe" />
-          }
-        >
-          <PlayersLabel playerOne="HomeTeam" playerTwo="Visitors666" />
-          <TurnLabel player="HomeTeam" playerSymbol={playerSymbol} />
-          <Grid>
-            <Square
-              number={0}
-              playerSymbol={playerSymbol}
-              setBoardTile={setBoardTile}
-            />
-            <Square
-              number={1}
-              playerSymbol={playerSymbol}
-              setBoardTile={setBoardTile}
-            />
-            <Square
-              number={2}
-              playerSymbol={playerSymbol}
-              setBoardTile={setBoardTile}
-            />
-            <Square
-              number={3}
-              playerSymbol={playerSymbol}
-              setBoardTile={setBoardTile}
-            />
-            <Square
-              number={4}
-              playerSymbol={playerSymbol}
-              setBoardTile={setBoardTile}
-            />
-            <Square
-              number={5}
-              playerSymbol={playerSymbol}
-              setBoardTile={setBoardTile}
-            />
-            <Square
-              number={6}
-              playerSymbol={playerSymbol}
-              setBoardTile={setBoardTile}
-            />
-            <Square
-              number={7}
-              playerSymbol={playerSymbol}
-              setBoardTile={setBoardTile}
-            />
-            <Square
-              number={8}
-              playerSymbol={playerSymbol}
-              setBoardTile={setBoardTile}
-            />
-          </Grid>
-        </StyledCard>
-      </Container>
+  socket.on('end-win', (data) => {
+    if (data.winnerSymbol === playerSymbol)
+      message.info('You won this round, next will start in 10 seconds', 10)
+    else message.info('You lost this round, next will start in 10 seconds', 10)
+  })
+
+  socket.on('end-draw', () => {
+    message.info(
+      'You have reached draw, next round will start in 10 seconds',
+      10,
     )
-  return <LoadingSpinnerForViews />
+  })
+
+  return (
+    <Container>
+      <StyledCard
+        title={
+          <Meta avatar={<Avatar src={ticTacToeLogo} />} title="Tic-Tac-Toe" />
+        }
+      >
+        <PlayersLabel playerOne={playerName} playerTwo={opponentName} />
+        <TurnLabel player="HomeTeam" playerSymbol={playerSymbol} />
+        <Grid>
+          <Square
+            number={0}
+            setBoardTile={setBoardTile}
+            squareContent={board[0]}
+          />
+          <Square
+            number={1}
+            setBoardTile={setBoardTile}
+            squareContent={board[1]}
+          />
+          <Square
+            number={2}
+            setBoardTile={setBoardTile}
+            squareContent={board[2]}
+          />
+          <Square
+            number={3}
+            setBoardTile={setBoardTile}
+            squareContent={board[3]}
+          />
+          <Square
+            number={4}
+            setBoardTile={setBoardTile}
+            squareContent={board[4]}
+          />
+          <Square
+            number={5}
+            setBoardTile={setBoardTile}
+            squareContent={board[5]}
+          />
+          <Square
+            number={6}
+            setBoardTile={setBoardTile}
+            squareContent={board[6]}
+          />
+          <Square
+            number={7}
+            setBoardTile={setBoardTile}
+            squareContent={board[7]}
+          />
+          <Square
+            number={8}
+            setBoardTile={setBoardTile}
+            squareContent={board[8]}
+          />
+        </Grid>
+      </StyledCard>
+    </Container>
+  )
 }
 
 TicTacToeBoard.propTypes = {
   socket: PropTypes.object.isRequired,
+  userData: PropTypes.object.isRequired,
 }

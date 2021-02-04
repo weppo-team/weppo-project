@@ -2,6 +2,23 @@ const { verifyToken } = require('../../services/auth/authJWT');
 
 const ROOM_SIZE_LIMIT = 2;
 
+const checkIfDraw = (board) => {
+  return !board.includes(' ')
+}
+
+const checkIfWon = (board) => {
+
+  return (board[0] !== ' ' && board[0] === board[1] === board[2]) ||
+                    (board[3] !== ' ' && board[3] === board[4] === board[5]) ||
+                    (board[6] !== ' ' && board[6] === board[7] === board[8]) ||
+                    (board[0] !== ' ' && board[0] === board[3] === board[6]) ||
+                    (board[1] !== ' ' && board[1] === board[4] === board[7]) ||
+                    (board[2] !== ' ' && board[2] === board[5] === board[8]) ||
+                    (board[0] !== ' ' && board[0] === board[4] === board[8]) ||
+                    (board[2] !== ' ' && board[2] === board[4] === board[6])
+}
+
+
 module.exports = function (app, io) {
   const tictactoeRooms = io.of('/api/sockets/tictactoe');
 
@@ -12,40 +29,45 @@ module.exports = function (app, io) {
       console.log(`disconnected: ${socket.id}`);
     });
 
-    let roomName
-
-    socket.on('joinRoom', room => {
-      socket.join(room);
-      roomName = room;
+    socket.on('joinRoom', name => {
+      socket.join(name)
+      const roomContent = tictactoeRooms.adapter.rooms.get(name)
+      socket.emit('takeSymbol', {
+        playerSymbol: roomContent.size == 2 ? 'O' : 'X'
+      })
+      if(roomContent.size == 2){
+        tictactoeRooms.to(name).emit('giveUserdata', {
+          roomName: name
+        })
+      }
     });
 
-    const boardState = []
-    for (let i = 0; i < 9; i += 1) {
-      boardState.push(' ')
-    }  
+    socket.on('giveUserdata', userData => {
+      tictactoeRooms.to(userData.roomName).emit('takeUserdata', {
+        username: userData.username, 
+        usertype: userData.usertype
+      });
+    })
 
-    socket.on('getSymbol', () => {
-      socket.emit('takeSymbol', {
-        playerSymbol: 'X'
-      })
-      socket.broadcast.emit('takeSymbol', {
-        playerSymbol: 'O'
-      });
-    }
-    )
-
-    socket.on('madeMove', moveData => {
-      console.log(`Move on server: ${moveData.username}`)
-      boardState[moveData.tile] = moveData.playerSymbol
-      console.log(`BoardState on server: ${boardState}`)
-      socket.emit('madeMove', {
-        turn: moveData.playerSymbol == 'X' ? 'O' : 'X', 
-        boardState
-      });
-      socket.broadcast.emit('madeMove', {
-        turn: moveData.playerSymbol == 'X' ? 'O' : 'X', 
-        boardState
-      });
+    socket.on('makeMove', (moveData) => {
+      if (checkIfWon(moveData.board)) {
+        tictactoeRooms.to(userData.roomName).emit('end-win', {
+          winnerSymbol: moveData.playerSymbol
+        })
+      }
+      else if (checkIfDraw(moveData.board)){
+        tictactoeRooms.to(userData.roomName).emit('end-draw')
+      }
+      else {
+        let newBoard = moveData.board
+        newBoard[moveData.tile] = moveData.playerSymbol
+        console.log(newBoard)
+        console.log(moveData.roomName)
+        tictactoeRooms.to(moveData.roomName).emit('madeMove', {
+          newBoard, 
+          moveSymbol: moveData.playerSymbol
+        })
+      }
     })
   });
 
