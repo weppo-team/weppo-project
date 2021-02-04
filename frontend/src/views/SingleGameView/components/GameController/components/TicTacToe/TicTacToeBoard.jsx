@@ -76,12 +76,14 @@ export const TicTacToeBoard = ({ socket, userData }) => {
   })
 
   socket.on('end-win', (data) => {
+    console.log('WIN')
     if (data.winnerSymbol === playerSymbol)
       message.info('You won this round, next will start in 10 seconds', 10)
     else message.info('You lost this round, next will start in 10 seconds', 10)
   })
 
   socket.on('end-draw', () => {
+    console.log('DRAW')
     message.info(
       'You have reached draw, next round will start in 10 seconds',
       10,

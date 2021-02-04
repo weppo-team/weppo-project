@@ -2,13 +2,10 @@ const { verifyToken } = require('../../services/auth/authJWT');
 
 const ROOM_SIZE_LIMIT = 2;
 
-const checkIfDraw = (board) => {
-  return !board.includes(' ')
-}
+const checkIfDraw = (board) => !board.includes(' ')
 
-const checkIfWon = (board) => {
-
-  return (board[0] !== ' ' && board[0] === board[1] === board[2]) ||
+const checkIfWon = (board) => 
+                    (board[0] !== ' ' && board[0] === board[1] === board[2]) ||
                     (board[3] !== ' ' && board[3] === board[4] === board[5]) ||
                     (board[6] !== ' ' && board[6] === board[7] === board[8]) ||
                     (board[0] !== ' ' && board[0] === board[3] === board[6]) ||
@@ -16,7 +13,7 @@ const checkIfWon = (board) => {
                     (board[2] !== ' ' && board[2] === board[5] === board[8]) ||
                     (board[0] !== ' ' && board[0] === board[4] === board[8]) ||
                     (board[2] !== ' ' && board[2] === board[4] === board[6])
-}
+
 
 
 module.exports = function (app, io) {
@@ -33,9 +30,9 @@ module.exports = function (app, io) {
       socket.join(name)
       const roomContent = tictactoeRooms.adapter.rooms.get(name)
       socket.emit('takeSymbol', {
-        playerSymbol: roomContent.size == 2 ? 'O' : 'X'
+        playerSymbol: roomContent.size === 2 ? 'O' : 'X'
       })
-      if(roomContent.size == 2){
+      if(roomContent.size === 2){
         tictactoeRooms.to(name).emit('giveUserdata', {
           roomName: name
         })
@@ -51,15 +48,15 @@ module.exports = function (app, io) {
 
     socket.on('makeMove', (moveData) => {
       if (checkIfWon(moveData.board)) {
-        tictactoeRooms.to(userData.roomName).emit('end-win', {
+        tictactoeRooms.to(moveData.roomName).emit('end-win', {
           winnerSymbol: moveData.playerSymbol
         })
       }
       else if (checkIfDraw(moveData.board)){
-        tictactoeRooms.to(userData.roomName).emit('end-draw')
+        tictactoeRooms.to(moveData.roomName).emit('end-draw')
       }
       else {
-        let newBoard = moveData.board
+        const newBoard = moveData.board
         newBoard[moveData.tile] = moveData.playerSymbol
         console.log(newBoard)
         console.log(moveData.roomName)
