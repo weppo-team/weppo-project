@@ -14,8 +14,6 @@ const checkIfWon = (board) =>
                     (board[0] !== ' ' && board[0] === board[4] === board[8]) ||
                     (board[2] !== ' ' && board[2] === board[4] === board[6])
 
-
-
 module.exports = function (app, io) {
   const tictactoeRooms = io.of('/api/sockets/tictactoe');
 
@@ -29,37 +27,33 @@ module.exports = function (app, io) {
     socket.on('joinRoom', name => {
       socket.join(name)
       const roomContent = tictactoeRooms.adapter.rooms.get(name)
-      socket.emit('takeSymbol', {
-        playerSymbol: roomContent.size === 2 ? 'O' : 'X'
-      })
-      if(roomContent.size === 2){
-        tictactoeRooms.to(name).emit('giveUserdata', {
-          roomName: name
-        })
-      }
+      if(roomContent.size === 2)
+        tictactoeRooms.to(name).emit('giveUserdata', {})
     });
 
     socket.on('giveUserdata', userData => {
-      tictactoeRooms.to(userData.roomName).emit('takeUserdata', {
+      const roomName = userData.roomName
+      tictactoeRooms.to(roomName).emit('takeUserdata', {
+        symbol: tictactoeRooms.adapter.rooms.get(roomName).values().next().value === socket.id ? 'X' : 'O',
         username: userData.username, 
         usertype: userData.usertype
       });
     })
 
     socket.on('makeMove', (moveData) => {
-      if (checkIfWon(moveData.board)) {
-        tictactoeRooms.to(moveData.roomName).emit('end-win', {
-          winnerSymbol: moveData.playerSymbol
+      const newBoard = moveData.board
+      newBoard[moveData.tile] = moveData.playerSymbol
+      if (checkIfWon(newBoard)) {
+        tictactoeRooms.to(moveData.roomName).emit('endWin', {
+          winnerSymbol: moveData.playerSymbol,
+          newBoard
         })
       }
-      else if (checkIfDraw(moveData.board)){
-        tictactoeRooms.to(moveData.roomName).emit('end-draw')
-      }
+      else if (checkIfDraw(newBoard))
+        tictactoeRooms.to(moveData.roomName).emit('endDraw', {
+          newBoard,
+        })
       else {
-        const newBoard = moveData.board
-        newBoard[moveData.tile] = moveData.playerSymbol
-        console.log(newBoard)
-        console.log(moveData.roomName)
         tictactoeRooms.to(moveData.roomName).emit('madeMove', {
           newBoard, 
           moveSymbol: moveData.playerSymbol

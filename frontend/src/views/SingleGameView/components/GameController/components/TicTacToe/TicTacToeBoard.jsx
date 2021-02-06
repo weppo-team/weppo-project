@@ -14,17 +14,16 @@ const { Container, StyledCard, Grid } = TicTacToeBoardElements
 export const TicTacToeBoard = ({ socket, userData }) => {
   const { roomName } = useParams()
   const [playerSymbol, setPlayerSymbol] = useState(' ')
+  const [opponentSymbol, setOpponentSymbol] = useState(' ')
   const playerName =
     userData.usertype === 'guest'
       ? `${userData.username} (guest)`
       : userData.username
   const [opponentName, setOpponentName] = useState('[waiting for opponent]')
-  const [opponentType, setOpponentType] = useState('N/A')
-  const [canMove, setCanMove] = useState('false')
+  const [canMove, setCanMove] = useState(false)
   const [board, setBoardState] = useState(Array(9).fill(' '))
 
   const setBoardTile = (i) => {
-    console.log(`${canMove} - ${roomName}`)
     if (canMove) {
       socket.emit('makeMove', {
         playerSymbol,
@@ -36,9 +35,9 @@ export const TicTacToeBoard = ({ socket, userData }) => {
   }
 
   useEffect(() => {
-    socket.on('giveUserdata', (data) => {
+    socket.on('giveUserdata', () => {
       socket.emit('giveUserdata', {
-        roomName: data.roomName,
+        roomName,
         username: userData.username,
         usertype: userData.usertype,
       })
@@ -46,37 +45,35 @@ export const TicTacToeBoard = ({ socket, userData }) => {
 
     socket.on('takeUserdata', (data) => {
       if (data.username !== userData.username) {
-        setOpponentType(data.usertype)
+        setCanMove(data.symbol === 'X')
+        setPlayerSymbol(data.symbol)
         setOpponentName(
-          opponentType === 'guest' ? `${data.username} (guest)` : data.username,
+          data.usertype === 'guest'
+            ? `${data.username} (guest)`
+            : data.username,
         )
+        setOpponentSymbol(playerSymbol === 'X' ? 'O' : 'X')
       }
-    })
-
-    socket.on('takeSymbol', (data) => {
-      setPlayerSymbol(data.playerSymbol)
-      if (playerSymbol === 'X') setCanMove(true)
     })
 
     socket.on('madeMove', (data) => {
       setBoardState(data.newBoard)
-      console.log(board)
       setCanMove(data.moveSymbol !== playerSymbol)
-      console.log(canMove)
     })
 
-    socket.on('end-win', (data) => {
+    socket.on('endDraw', (data) => {
+      setCanMove(false)
+      setBoardState(data.newBoard)
+      message.info('Round ended in draw, next will start in 10 seconds', 10)
+    })
+
+    socket.on('endWin', (data) => {
+      setCanMove(false)
+      setBoardState(data.newBoard)
       if (data.winnerSymbol === playerSymbol)
         message.info('You won this round, next will start in 10 seconds', 10)
       else
         message.info('You lost this round, next will start in 10 seconds', 10)
-    })
-
-    socket.on('end-draw', () => {
-      message.info(
-        'You have reached draw, next round will start in 10 seconds',
-        10,
-      )
     })
   }, [userData])
 
@@ -88,7 +85,10 @@ export const TicTacToeBoard = ({ socket, userData }) => {
         }
       >
         <PlayersLabel playerOne={playerName} playerTwo={opponentName} />
-        <TurnLabel player="HomeTeam" playerSymbol={playerSymbol} />
+        <TurnLabel
+          player={canMove ? playerName : opponentName}
+          playerSymbol={canMove ? playerSymbol : opponentSymbol}
+        />
         <Grid>
           {[...Array(9)].map((_, index) => (
             <Square
