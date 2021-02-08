@@ -22,6 +22,7 @@ You should create `.env` file inside `backend/` directory. It should include the
 
 ```
 DB_URI=...
+JWT_SECRET=...
 ```
 
 ## Local setup
