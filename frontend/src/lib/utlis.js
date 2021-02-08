@@ -19,13 +19,16 @@ export const useSelectedGameObject = () => {
 export const useGetSocket = (apiRoute) => {
   const [socket, setSocket] = useState(null)
 
-  const initSocket = () => {
+  const initSocket = (callback) => {
     if (!socket) {
-      setSocket(
-        io.connect(`${apiRoute}`, {
-          transports: ['websocket'],
-        }),
-      )
+      const newSocket = io.connect(`${apiRoute}`, {
+        transports: ['websocket'],
+      })
+
+      callback(newSocket)
+      setSocket(newSocket)
+    } else {
+      callback(socket)
     }
   }
 
