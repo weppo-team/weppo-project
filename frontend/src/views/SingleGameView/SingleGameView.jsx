@@ -1,7 +1,9 @@
-import { useParams } from 'react-router-dom'
 import { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import { ContentHeadingSection } from '../../components/ContentHeadingSection'
 import { useGetSocket } from '../../lib/utlis'
+import { GameController } from './components/GameController'
+import { LoadingSpinnerForViews } from '../../components/LoadingSpinnerForViews'
 
 export const SingleGameView = () => {
   const { roomName, gameName } = useParams()
@@ -10,23 +12,21 @@ export const SingleGameView = () => {
   )
 
   useEffect(() => {
-    initSocket()
-
+    initSocket((argSocket) => argSocket.emit('joinRoom', roomName))
     return () => disconnectSocket()
-  }, [])
+  }, [socket, initSocket, disconnectSocket])
 
-  useEffect(() => {
-    if (socket) {
-      socket.emit('joinRoom', roomName)
-    }
-  }, [socket])
+  if (socket) {
+    return (
+      <>
+        <ContentHeadingSection
+          title="Game room"
+          subtitle="You are in the room, this the place where you can play the game!"
+        />
+        <GameController gameName={gameName} socket={socket} />
+      </>
+    )
+  }
 
-  return (
-    <>
-      <ContentHeadingSection
-        title="Game room"
-        subtitle="You are in the room, this the place where you can play the game!"
-      />
-    </>
-  )
+  return <LoadingSpinnerForViews />
 }
