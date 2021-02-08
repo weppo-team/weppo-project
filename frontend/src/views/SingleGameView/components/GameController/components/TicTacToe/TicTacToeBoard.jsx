@@ -52,7 +52,7 @@ export const TicTacToeBoard = ({ socket, userData }) => {
             ? `${data.username} (guest)`
             : data.username,
         )
-        setOpponentSymbol(playerSymbol === 'X' ? 'O' : 'X')
+        setOpponentSymbol(data.symbol === 'X' ? 'O' : 'X')
       }
     })
 
@@ -72,10 +72,17 @@ export const TicTacToeBoard = ({ socket, userData }) => {
       setBoardState(data.newBoard)
       if (data.winnerSymbol === playerSymbol)
         message.info('You won this round, next will start in 10 seconds', 10)
-      else
+      else if (data.winnerSymbol === opponentSymbol)
         message.info('You lost this round, next will start in 10 seconds', 10)
     })
-  }, [userData])
+  }, [
+    playerSymbol,
+    setBoardState,
+    setCanMove,
+    setOpponentName,
+    setOpponentSymbol,
+    setPlayerSymbol,
+  ])
 
   return (
     <Container>
