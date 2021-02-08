@@ -64,14 +64,19 @@ export const TicTacToeBoard = ({ socket, userData }) => {
     socket.on('endDraw', (data) => {
       setCanMove(false)
       setBoardState(data.newBoard)
-      message.info('Round ended in draw, next will start in 10 seconds', 10)
+      /* multiple re-renders here */
+      if (playerSymbol !== ' ' && opponentSymbol !== ' ') {
+        message.info('Round ended in draw, next will start in 10 seconds', 10)
+      }
     })
 
     socket.on('endWin', (data) => {
       setCanMove(false)
       setBoardState(data.newBoard)
+      /* multiple re-renders here */
       if (data.winnerSymbol === playerSymbol && opponentSymbol)
         message.info('You won this round, next will start in 10 seconds', 10)
+      /* multiple re-renders here */
       if (data.winnerSymbol === opponentSymbol && playerSymbol)
         message.info('You lost this round, next will start in 10 seconds', 10)
     })
