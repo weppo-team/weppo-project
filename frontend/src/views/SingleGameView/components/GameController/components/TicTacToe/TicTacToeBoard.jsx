@@ -7,12 +7,13 @@ import { TicTacToeBoardElements } from './elements'
 import { PlayersLabel } from './components/PlayersLabel'
 import { TurnLabel } from './components/TurnLabel'
 import { Square } from './components/Square'
+import { updateStats } from '../../../../../../services/stats/statsServices'
 
 const { Meta } = Card
 const { Container, StyledCard, Grid } = TicTacToeBoardElements
 
 export const TicTacToeBoard = ({ socket, userData }) => {
-  const { roomName } = useParams()
+  const { roomName, gameName } = useParams()
   const [playerSymbol, setPlayerSymbol] = useState(' ')
   const [opponentSymbol, setOpponentSymbol] = useState(' ')
   const playerName =
@@ -97,6 +98,9 @@ export const TicTacToeBoard = ({ socket, userData }) => {
           'Round ended in draw, click on rematch to start another game',
           10,
         )
+        if (userData.usertype !== 'guest') {
+          updateStats(gameName, 'draw')
+        }
       }
     })
   }
@@ -107,17 +111,25 @@ export const TicTacToeBoard = ({ socket, userData }) => {
       setBoardState(data.newBoard)
       setGameState(false)
       /* multiple re-renders here */
-      if (data.winnerSymbol === playerSymbol && opponentSymbol !== ' ')
+      if (data.winnerSymbol === playerSymbol && opponentSymbol !== ' ') {
         message.info(
           'You won this round, click on rematch to start another game',
           10,
         )
+        if (userData.usertype !== 'guest') {
+          updateStats(gameName, 'win')
+        }
+      }
       /* multiple re-renders here */
-      if (data.winnerSymbol === opponentSymbol && playerSymbol !== ' ')
+      if (data.winnerSymbol === opponentSymbol && playerSymbol !== ' ') {
         message.info(
           'You lost this round, click on rematch to start another game',
           10,
         )
+        if (userData.usertype !== 'guest') {
+          updateStats(gameName, 'lost')
+        }
+      }
     })
   }
 
