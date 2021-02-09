@@ -25,6 +25,15 @@ DB_URI=...
 JWT_SECRET=...
 ```
 
+## Test user
+
+If you want to have a testing account in our database you could use one of already created test users:
+
+```
+login: dawid1
+password: dawid111
+```
+
 ## Local setup
 
 Firstly you need to install all required packages. To achieve that you should run `yarn install` command inside `frontend` and `backend` directories. Then you should start client and server:
