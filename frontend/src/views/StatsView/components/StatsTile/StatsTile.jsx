@@ -16,7 +16,7 @@ export const StatsTile = ({ disabled, icon, title, name }) => {
   const [lost, setLost] = useState(0)
 
   useEffect(() => {
-    if (!disabled)
+    if (!disabled) {
       stats(name)
         .then((response) => {
           setElo(response.data.eloScore)
@@ -25,6 +25,7 @@ export const StatsTile = ({ disabled, icon, title, name }) => {
           setLost(response.data.amountOfLostGames)
         })
         .catch((error) => message.error(error.response.data.message))
+    }
   }, [])
 
   let statsContent
