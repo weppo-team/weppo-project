@@ -40,18 +40,29 @@ module.exports = function (app, io) {
       });
     })
 
+    socket.on('restartGame', (data) => {
+      const newBoard = data.board
+      const gameState = data.gameState
+      tictactoeRooms.to(data.roomName).emit('restartedGame', {
+        newBoard,
+        gameState
+      })
+    })
+
     socket.on('makeMove', (moveData) => {
       const newBoard = moveData.board
       newBoard[moveData.tile] = moveData.playerSymbol
       if (checkIfWon(newBoard)) {
         tictactoeRooms.to(moveData.roomName).emit('endWin', {
           winnerSymbol: moveData.playerSymbol,
-          newBoard
+          newBoard,
+          moveSymbol: moveData.playerSymbol
         })
       }
       else if (checkIfDraw(newBoard))
         tictactoeRooms.to(moveData.roomName).emit('endDraw', {
           newBoard,
+          moveSymbol: moveData.playerSymbol
         })
       else {
         tictactoeRooms.to(moveData.roomName).emit('madeMove', {

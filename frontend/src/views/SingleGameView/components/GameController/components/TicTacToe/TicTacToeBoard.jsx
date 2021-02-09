@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { Card, Avatar, message } from 'antd'
+import { Card, Avatar, Button, message } from 'antd'
 import ticTacToeLogo from '../../../../../../logos/tic-tac-toe.svg'
 import { TicTacToeBoardElements } from './elements'
 import { PlayersLabel } from './components/PlayersLabel'
@@ -22,6 +22,7 @@ export const TicTacToeBoard = ({ socket, userData }) => {
   const [opponentName, setOpponentName] = useState('[waiting for opponent]')
   const [canMove, setCanMove] = useState(false)
   const [board, setBoardState] = useState(Array(9).fill(' '))
+  const [gameState, setGameState] = useState(true)
 
   const setBoardTile = (i) => {
     if (canMove) {
@@ -34,7 +35,26 @@ export const TicTacToeBoard = ({ socket, userData }) => {
     }
   }
 
-  useEffect(() => {
+  const restartGame = () => {
+    const emptyBoard = Array(9).fill(' ')
+    setBoardState(emptyBoard)
+    setCanMove(true)
+    setGameState(true)
+    socket.emit('restartGame', {
+      board: emptyBoard,
+      roomName,
+      gameState: true,
+    })
+  }
+
+  const listenOnGameRestart = () => {
+    socket.on('restartedGame', (data) => {
+      setBoardState(data.newBoard)
+      setGameState(data.gameState)
+    })
+  }
+
+  const giveUserData = () => {
     socket.on('giveUserdata', () => {
       socket.emit('giveUserdata', {
         roomName,
@@ -42,7 +62,9 @@ export const TicTacToeBoard = ({ socket, userData }) => {
         usertype: userData.usertype,
       })
     })
+  }
 
+  const takeUserData = () => {
     socket.on('takeUserdata', (data) => {
       if (data.username !== userData.username) {
         setCanMove(data.symbol === 'X')
@@ -55,31 +77,57 @@ export const TicTacToeBoard = ({ socket, userData }) => {
         setOpponentSymbol(data.symbol === 'X' ? 'O' : 'X')
       }
     })
+  }
 
+  const madeMove = () => {
     socket.on('madeMove', (data) => {
       setBoardState(data.newBoard)
       setCanMove(data.moveSymbol !== playerSymbol)
     })
+  }
 
+  const checkDrawCondition = () => {
     socket.on('endDraw', (data) => {
       setCanMove(false)
       setBoardState(data.newBoard)
+      setGameState(false)
       /* multiple re-renders here */
       if (playerSymbol !== ' ' && opponentSymbol !== ' ') {
-        message.info('Round ended in draw, next will start in 10 seconds', 10)
+        message.info(
+          'Round ended in draw, click on rematch to start another game',
+          10,
+        )
       }
     })
+  }
 
+  const checkWinCondition = () => {
     socket.on('endWin', (data) => {
       setCanMove(false)
       setBoardState(data.newBoard)
+      setGameState(false)
       /* multiple re-renders here */
-      if (data.winnerSymbol === playerSymbol && opponentSymbol)
-        message.info('You won this round, next will start in 10 seconds', 10)
+      if (data.winnerSymbol === playerSymbol && opponentSymbol !== ' ')
+        message.info(
+          'You won this round, click on rematch to start another game',
+          10,
+        )
       /* multiple re-renders here */
-      if (data.winnerSymbol === opponentSymbol && playerSymbol)
-        message.info('You lost this round, next will start in 10 seconds', 10)
+      if (data.winnerSymbol === opponentSymbol && playerSymbol !== ' ')
+        message.info(
+          'You lost this round, click on rematch to start another game',
+          10,
+        )
     })
+  }
+
+  useEffect(() => {
+    giveUserData()
+    takeUserData()
+    madeMove()
+    checkWinCondition()
+    checkDrawCondition()
+    listenOnGameRestart()
   }, [playerSymbol, opponentSymbol])
 
   return (
@@ -104,6 +152,14 @@ export const TicTacToeBoard = ({ socket, userData }) => {
             />
           ))}
         </Grid>
+        <Button
+          type="primary"
+          size="large"
+          disabled={gameState}
+          onClick={restartGame}
+        >
+          Rematch
+        </Button>
       </StyledCard>
     </Container>
   )
